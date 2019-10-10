@@ -67,13 +67,14 @@ S.~W.~Ndiritu,$^{1}$\thanks{E-mail: simon.ndiritu@postgrad.manchester.ac.uk
  (SWN)}
 A.~M.~M.~Scaife$^{1}$,
 D.~Tabb$^{2}$,
-M.~C{\'a}rcamo$^{1}$,
+M.~C{\'a}rcamo$^{1,3}$,
 J.~Hanson$^{1}$ \&
 H.~Baird$^{1}$
 \\
 % List of institutions
 $^{1}$ Jodrell Bank Centre for Astrophysics, School of Physics and Astronomy, University of Manchester, Alan Turing Building,\\ Oxford Road, Manchester, M13 9PL, UK \\
-$^{2}$ Jodrell Bank Centre for Astrophysics, School of Physics and Astronomy, University of Manchester, Alan Turing Building,\\ Oxford Road, Manchester, M13 9PL, UK
+$^{2}$ Jodrell Bank Centre for Astrophysics, School of Physics and Astronomy, University of Manchester, Alan Turing Building,\\ Oxford Road, Manchester, M13 9PL, UK \\
+$^{3}$ Departamento de Ingenier\'ia Inform\'atica, Universidad de Santiago de Chile, Av. Ecuador 3659, Santiago, Chile \\
 }
 
 % These dates will be filled out by the publisher
@@ -276,8 +277,6 @@ where,
 %
 In the case where the covariance matrix is characterised solely by stationary kernels, i.e. kernels that are functions of the sample separation, $|x_i - x_j|$, only, it can be assumed that $K_{\rm U}\equiv K_{\rm Q}$.
 
-
-
 \subsection{Re-sampling Definition}
 \label{sec:resamp}
 
@@ -425,16 +424,16 @@ Due to the stationary nature of the covariance kernels, it is not possible to re
 c_{\rm corr}^{\pm} = \langle Q,U^{\pm} \rangle.
 \end{equation}
 
-We evaluate the accuracy of the RM recovery for Faraday thin sources as a function of the signal-to-noise (SNR) of the integrated polarization data, ${\rm SNR}_{\rm int}$. We define this value as
+We evaluate the accuracy of the RM recovery for Faraday thin sources as a function of the signal-to-noise (SNR) of the integrated polarization data, ${\rm SNR}_{\rm int}$. Following Sun et~al. (2017), we define this value as
 %
 \begin{equation}
-{\rm SNR}_{\rm int} = \sqrt{2\,N_{\rm chan}} \times \frac{P_0}{\sigma_{\nu}},
+{\rm SNR}_{\rm int} = \sqrt{N_{\rm chan}} \times \frac{P_0}{\sigma_{\nu}},
 \end{equation}
 %
-where $\sigma_{\nu}$ is the standard deviation of the random Gaussian noise added to each frequency channel and $N_{\rm chan}$ is the number of frequency channels. $P_0$ is the polarized amplitude at the reference frequency, taken in this case to be 1.4\,GHz. Noise is added independently to both Stokes Q and Stokes U data. It can be seen in Figure~\ref{fig:rm_snr} that for Scenario~1, the rotation measure is recovered with $< 1\,\sigma$ deviation from the true value for even low values of ${\rm SNR}_{\rm int}<10$ where the signal-to-noise on an individual frequency channel, ${\rm SNR}_{\rm chan}\ll 1$. A minimum value of ${\rm SNR}_{\rm int}=8$ is typically used to identify sources in total polarization images\footnote{For polarisation $8\sigma$ is used as a typical detection threshold rather than $5\sigma$ due to the non-Gausianity of the noise in total polarization.} and this value is marked in Figure~\ref{fig:rm_snr}. It can be seen that the optimized RM value is in good agreement with both the expectation value and the true value of the RM above this limit. Below this limit
+where $\sigma_{\nu}$ is the standard deviation of the random Gaussian noise added to each frequency channel and $N_{\rm chan}$ is the number of frequency channels. $P_0$ is the polarized amplitude at the reference frequency, taken in this case to be 1.4\,GHz. Noise is added independently to both Stokes Q and Stokes U data. It can be seen in Figure~\ref{fig:rm_snr} that for Scenario~1, the rotation measure is recovered with $< 1\,\sigma$ deviation from the true value for even low values of ${\rm SNR}_{\rm int}<10$ where the signal-to-noise on an individual frequency channel, ${\rm SNR}_{\rm chan}\ll 1$. A minimum value of ${\rm SNR}_{\rm int}=8$ is typically used to identify sources in total polarization images (e.g. George et~al. 2012) and this value is marked in Figure~\ref{fig:rm_snr}. It can be seen that the optimized RM value is in good agreement with both the expectation value and the true value of the RM above this limit. Below this limit
 %
 \begin{figure*}
-\centerline{\includegraphics[width=0.9\textwidth]{./FIGURES/snr_int.png}}
+\centerline{\includegraphics[width=0.9\textwidth]{./FIGURES/figure4.png}}
 \caption{\label{fig:rm_snr} Recovered rotation measure (RM) as a function of the signal-to-noise (SNR) in the integrated polarization data for Scenario~1. Maximum likelihood RM estimates are shown as blue points, expectation RM estimates with a 68\% confidence interval are shown as black points. The true value of the RM is shown as a horizontal dashed line (grey) and the point at which the signal-to-noise in an individual frequency channel is equal to one is shown as a vertical dashed line (blue). The distribution of equivalent expectation values for ten different noise realisations are shown as light grey lines.}
 \end{figure*}
 
@@ -477,27 +476,28 @@ In this case, recovering the Faraday depth of the thin component is not as stron
 \caption{\label{fig:flagging2} Faraday depth spectra for Scenario~2 (Faraday complex) with 20\% (top), 30\% (middle) and 40\% (bottom) of channel data flagged and ${\rm SNR}_{\rm chan, U} = 1$. Left: Faraday depth spectrum from flagged data. Right: Faraday depth spectra from GPM reconstructed data as described in \S~\ref{sec:missing}. The input Faraday depth spectrum is marked by solid lines (dark grey).}
 \end{figure*}
 
-\subsection{Recovery of Faraday Thick Structure}
-\label{sec:thick}
+%\subsection{Recovery of Faraday Thick Structure}
+%\label{sec:thick}
 
-As shown in Equation~\ref{eq:fdscale}, the sensitivity of a measured Faraday depth spectrum, $F(\phi)$, to extended or thick structures of a particular scale along the line of sight is governed by the minimum value of wavelength-squared sampled by the measurement. This inverse relationship means that data which are are observed at shorter wavelengths will have greater sensitivity to larger scale Faraday thick structures. However, due to the limitations on recoverable fractional bandwidth in radio astronomy receiver systems, these observations will also generally suffer from poorer resolution in Faraday depth.
+%As shown in Equation~\ref{eq:fdscale}, the sensitivity of a measured Faraday depth spectrum, $F(\phi)$, to extended or thick structures of a particular scale along the line of sight is governed by the minimum value of wavelength-squared sampled by the measurement. This inverse relationship means that data which are are observed at shorter wavelengths will have greater sensitivity to larger scale Faraday thick structures. However, due to the limitations on recoverable fractional bandwidth in radio astronomy receiver systems, these observations will also generally suffer from poorer resolution in Faraday depth.
 
-Gaussian processes have historically been used for forward prediction of time series in a number of different applications [REFs]. Here we demonstrate that by making a prediction of the posterior mean at wavelengths smaller than the minimum observable wavelength GPs can be used to improve the recovery of extended structures in Faraday depth space.  This is illustrated in Figure~\ref{fig:extended} (top), where Stokes~Q and Stokes~U data have been predicted at values of $\lambda^2$ up to two orders of magnitude smaller than the measured $\lambda^2_{\rm min}$. The resulting Faraday depth spectrum is shown in Figure~\ref{fig:extended} (bottom), where the improvement in structure definition is clearly seen for the GP reconstructed spectrum relative to the Faraday depth spectrum calculated from the original measurements. The more detailed discussion of these results is presented in \S~\ref{sec:disc}. 
+%Gaussian processes have historically been used for forward prediction of time series in a number of different applications [REFs]. Here we demonstrate that by making a prediction of the posterior mean at wavelengths smaller than the minimum observable wavelength GPs can be used to improve the recovery of extended structures in Faraday depth space.  This is illustrated in Figure~\ref{fig:extended} (top), where Stokes~Q and Stokes~U data have been predicted at values of $\lambda^2$ up to two orders of magnitude smaller than the measured $\lambda^2_{\rm min}$. The resulting Faraday depth spectrum is shown in Figure~\ref{fig:extended} (bottom), where the improvement in structure definition is clearly seen for the GP reconstructed spectrum relative to the Faraday depth spectrum calculated from the original measurements. The more detailed discussion of these results is presented in \S~\ref{sec:disc}. 
 %
-\begin{figure*}
-\centerline{\includegraphics[width=0.9\textwidth]{./FIGURES/3rmtf_l0.png}}
-\centerline{\includegraphics[width=0.9\textwidth]{./FIGURES/3fspec_l0.png}}
-\caption{\label{fig:scen2extend} Scenario 2: RMTF (top left) and Faraday depth spectrum (bottom left) for data uniformly sampled in frequency; RMTF (top centre) and Faraday depth spectrum (bottom centre) for data uniformly sampled in $\lambda^2$ in the range $0\le \lambda^2 \le \lambda^2_{\rm max}$ with weights from the posterior covariance; RMTF (top right) and Faraday depth spectrum (bottom right) for data uniformly sampled in $\lambda^2$ in the range $0\le \lambda^2 \le \lambda^2_{\rm max}$ with all weights set to unity. Data are noiseless in all cases.}
-\end{figure*}
+%\begin{figure*}
+%\centerline{\includegraphics[width=0.9\textwidth]{./FIGURES/3rmtf_l0.png}}
+%\centerline{\includegraphics[width=0.9\textwidth]{./FIGURES/3fspec_l0.png}}
+%\caption{\label{fig:scen2extend} Scenario 2: RMTF (top left) and Faraday depth spectrum (bottom left) for data uniformly sampled in frequency; RMTF (top centre) and Faraday depth spectrum (bottom centre) for data uniformly sampled in $\lambda^2$ in the range $0\le \lambda^2 \le \lambda^2_{\rm max}$ with weights from the posterior covariance; RMTF (top right) and Faraday depth spectrum (bottom right) for data uniformly sampled in $\lambda^2$ in the range $0\le \lambda^2 \le \lambda^2_{\rm max}$ with all weights set to unity. Data are noiseless in all cases.}
+%\end{figure*}
 
 \subsection{Multiple Sources along the line of sight}
 \label{sec:multiple}
 
-As described in Sun et~al. (2014), it is expected that many lines of sight will have more than one Faraday thin component. Such Faraday geometries are also able to be recovered by the kernel in Equation~\ref{eq:celkernel}. In this case the hyper-parameter $P$ will represent the $|RM|$ of the component with the highest rotation. An example of where this can occur is the super-position of radio galaxy jets or lobes oriented along a line of sight unresolved by the beam of a telescope. Such geometries result in double Faraday components, typically with similar Faraday depths as the integrated rotation differs only by the degree contributed in the local medium between the jets whilst experiencing a common degree of rotation from the comparatively larger path between the galaxy and the observer. An example of such a situation is shown in Figure~\ref{fig:double}. 
+As described in Sun et~al. (2014), it is expected that many lines of sight will have more than one Faraday thin component. Such Faraday geometries are also able to be recovered by the kernel in Equation~\ref{eq:celkernel}. In this case the hyper-parameter $P$ will represent the $|RM|$ of the component with the highest rotation. An example of where this can occur is the super-position of radio galaxy jets or lobes oriented along a line of sight unresolved by the beam of a telescope. Such geometries result in double Faraday components, typically with similar Faraday depths as the integrated rotation differs only by the degree contributed in the local medium between the jets whilst experiencing a common degree of rotation from the comparatively larger path between the galaxy and the observer. An example of such a situation is shown in Figure~\ref{fig:double}. We illustrate the GP model in this figure at high signal to noise, SNR$_{\rm chan} = 20$, to show that the GP can accurately represent the complex polarization behaviour of multiple sources without requiring additional kernel components. The Faraday depth spectra in Figure~\ref{fig:double} show the recovered Faraday depth spectrum from the noisy input data (left) and from the optimised GP reconstruction (right). It can be observed that the double structure is more apparent in the GP reconstruction. We note that the separation of the peaks in Faraday depth is wider than the separation of components in the model. This is not an artefact of the GP reconstruction, but due to the position of the first null in the RMTF. 
 %
 \begin{figure*}
-\includegraphics[width=0.9\textwidth]{./FIGURES/diff_double_n1.png}
-\caption{\label{fig:double} Left upper: Stokes parameters for line of sight comprised of two Faraday thin sources with SNR$_{\rm chan}=1$ (black \& grey error bars), and maximum a posteriori GP model (Equation~\ref{eq:celkernel}; blue solid line) with one standard deviation posterior uncertainty (grey shaded area). Left lower: residuals between the posterior mean for Stokes Q and the data (black points) and residuals between the posterior mean and the missing/flagged Stokes Q data (blue points). The $\pm3\sigma$ limits are marked by grey dashed lines. Right: The inferred period of the process with the true period marked (vertical blue line) as well as the 16\%, 50\% and 84\% confidence intervals of the posterior probability distribution (grey dashed lines).}
+\includegraphics[width=0.88\textwidth]{./FIGURES/double_qu.png}
+\includegraphics[width=0.9\textwidth]{./FIGURES/diff_double.png}
+\caption{\label{fig:double} Upper: Stokes parameters for line of sight comprised of two Faraday thin sources with SNR$_{\rm chan}=20$ (black \& grey error bars), and maximum a posteriori GP model (Equation~\ref{eq:celkernel}; blue solid line) with one standard deviation posterior uncertainty (grey shaded area). Left lower: Faraday depth spectrum calculated from the noisy input data sampled at regular intervals in frequency. Right lower: Faraday depth spectrum calculated from the optimised GPM sampled at regular intervals in $\lambda^2$-space with the model components marked as solid black lines.}
 \end{figure*}
  
 
@@ -507,19 +507,24 @@ As described in Sun et~al. (2014), it is expected that many lines of sight will 
 We now extend the application to simulated data to a large data set, such as might be recovered from a MeerKAT observation of a survey field. We use a simulated data set containing Stokes~Q and Stokes~U data for 10,000 Faraday thin sources. Observational parameters are matched to those of the MeerKAT telescope, one of the precursor arrays of the Square Kilometre Array (SKA) (Dewdney et al. 2009, Jonas 2009). The MeerKAT consists of 64 13.5\,m parabolic dishes sited in the Northern Cape province of South Africa. 
 
 Polarization surveys for the MIGHTEE survey [REF] are expected to be conducted in the MeerKAT mid-frequency band ($0.90 - 1.67$\,GHz) using 135 frequency channels across the band. This results in a channel width of $\delta\nu \approx 6$\,MHz. The sensitivity of the MeerKAT is expected to be 12\,$\mu$Jy for a 6\,hour observation, which is equivalent to a noise of $\sigma_{\nu} = 140\,\mu$Jy per channel. The relevant parameters of the MeerKAT for this work are as shown in Table~\ref{tab:meerkat} (Jonas 2016, Taylor \& Jarvis 2017).
-
+%
 \begin{table}
 \caption{\label{tab:meerkat}}
-\begin{tabular}{|l|c|c|c|c|c|c|}
+\begin{tabular}{|l|c|c|c|c|}
 \hline
-& $\Delta \lambda^2$ & $\lambda^2_{\rm min}$ & $\delta \lambda^2$ & $\delta \phi$ & $\phi_{\rm max}$ & $|\phi_{\rm max-scale}|$ \\\hline
-$0.58 - 1.01$\,GHz & &&&&&\\
-$0.90 - 1.67$\,GHz & &&&&&\\
-$1.75 - 2.50$\,GHz & &&&&&\\\hline
+& $\Delta \lambda^2$ & $\lambda^2_{\rm min}$ & $\delta \phi$ & $|\phi_{\rm max-scale}|$ \\\hline
+$0.58 - 1.01$\,GHz & 0.179 & 0.088 & 19.35 & 35.70\\
+$0.90 - 1.67$\,GHz & 0.079 & 0.032 & 43.85 & 98.17\\
+$1.75 - 2.50$\,GHz & 0.015 & 0.014 & 230.94 & 224.40\\\hline
 \end{tabular}
 \end{table}
 
 The simulated Faraday thin sources have a range of rotation measure values drawn from a uniform distribution, $-100<RM<100$\,rad\,m$^{-2}$. The amplitude of the polarized intensity for these sources is drawn from the 1.4\,GHz source counts model of [REF] and the values in the dataset range from 47\,$\mu$Jy to 28\,mJy. 
+%
+\begin{figure*}
+\includegraphics[width=0.9\textwidth]{./FIGURES/figure9.png}
+\caption{\label{fig:survey}}
+\end{figure*}
 
 Data flagging for the MeerKAT in this band is expected to remove approximately $20-30\%$ of the bandwidth due to radio frequency interference from satellites. 
 
@@ -547,68 +552,6 @@ It is also important to note that structures which exist only on scales larger t
 
 In the scenarios considered here, we have assumed a zero-valued mean function. In the absence of instrumental leakage, this assumption is valid for modelling Faraday rotation; however, the presence of residual instrumental leakage can result in a non-zero offset in both Stokes~Q and Stokes~U. The inclusion of such a constant offset as a free parameter (separately for Q and U) in the optimization process is straightforward to implement and requires only very minor changes to be made in the calculation of the posterior mean. However, for some telescopes with wide bandwidths, polarization leakage can be frequency-dependent and consequently modelling it as a comstant offset will not be sufficient. In this case there is potential for confusion between the leakage term and covariate behaviour in the complex polarization; as can be seen in Figure~\ref{fig:scenario2}, smoothly varying systematic changes in amplitude can be modelled perfectly well using stationary kernels.
 
-\subsection{Kernel selection}
-\label{sec:infocrit}
-
-For a given regression problem, there are an infinite number of models that can be used. As such, it is usually not possible to test all possible models. Although different methods of evaluating competing models have been developed, the computational complexity involved in applying them limits their applicability. To overcome this limitation, easier-to-use approximate methods are commonly used to compare the performance of two or more models. These include the Bayesian Information Criterion (BIC), the Akaike Information Criterion (AIC) and the corrected Akaike Information Criterion (AICc) (Burnham \& Anderson 2004). These information criteria are designed to evaluate the amount of information lost by a particular model. The model that loses the least information (i.e. has the lowest valued information criterion) is considered to be the preferred model.
-
-The BIC is considered to be a powerful model selection tool when the `true' model is in the set of test models. For simulated data such as that used here, this is considered appropriate; however, in the case of true empirical data the AIC is considered to be a more appropriate criterion. Furthermore, the {\it corrected} AIC places a stronger complexity penalty on models used with finite data series than the original AIC. In the case of small sample sizes it is considered to be more appropriate and accurate for finding the preferred model. For a more detailed comparison of the different information criteria we refer the reader to Burnham \& Anderson (2002).
-
-To assess the performance of the GP model described in \S~\ref{sec:method} and denoted here as "3-HP" we compare it to (i) the quasi-periodic kernel used by Foreman-Mackey et al. (2017) used to model stellar variability, and (ii) a hybrid kernel including a second squared-exponential term. 
-
-In Foreman-Mackey et al. (2017), the period of rotation of a star was determined by extracting the optimised $P$ hyper-parameter, analogous to our use of $P$ to estimate the rotation measure of a Faraday thin source. The stellar variability kernel from Foreman-Mackey et al. (2017) is also built using the {\tt celerite} library and has the form,
-%
-\begin{equation}
-\label{eq:fmkernel}
-k(x_i,x_j)=\frac{B}{1+C}\,{\rm e}^{-A|x_i - x_j|}\left[\cos\left(\frac{2\pi|x_i - x_j|}{P}\right) + (1+C)\right],
-\end{equation}
-%
-where $A$, $B$, $C$ and $P$ are hyper-parameters. We denote this kernel as "4-HP".
-
-The hybrid kernel, denoted here as "5-HP", has the form,
-%
-\begin{equation}
-\label{eq:celkernel}
-k(x_i,x_j)=h_1\,{\rm e}^{-c_1|x_i - x_j|}\cos\left(\frac{2\pi|x_i - x_j|}{P}\right) + h_2\,{\rm e}^{-c_2|x_i - x_j|},
-\end{equation}
-%
-where $h_1$, $c_1$, $P$, $h_2$ and $c_2$ are hyper-parameters. This kernel has an extra term which is intended to model smoothly varying non-periodic behaviour such as that which might arise from Faraday thick components along the line of sight.
-
-Assuming a zero-valued mean function, we optimize the hyper-parameters for each of the kernels in Equation~\ref{eq:celkernel} (3 hyper-parameters) and for the kernel in Equation~\ref{eq:fmkernel} (4 hyper-parameters). We do this for simulations of data for 2000 Faraday thin sources with rotation measures randomly selected from a uniform distribution with $-100< RM < 100$\,rad\,m$^{-2}$. No noise is added to these data and so we do not include the additive white noise term with either kernel. For each sample dataset we find the maximum likelihood using the method described in \S~\ref{sec:optimization} and use this value to compute the Bayesian Information Criteria (BIC; Schwarz et al. 1978),
-%
-\begin{equation}
-{\rm BIC} = -2 \log L^\ast + K \log N,
-\end{equation}
-%
-the Akaike Information Criterion (AIC; Akaike 1974),
-%
-\begin{equation}
-{\rm AIC} = 2 K - 2\log L^\ast,
-\end{equation}
-%
-and the corrected AIC (AICc; Hurvich \& Tsai 1989),
-%
-\begin{equation}
-{\rm AICc} = {\rm AIC} + \frac{2K(K+1)}{N - K - 1},
-\end{equation}
-%
-where $L^\ast$ is the maximum value of the likelihood, $K$ is the number of free parameters, and $N$ is the number of data points. The information criteria are then averaged over the set of 2000 samples.
-%
-\begin{table}
-\caption{Model comparison for Scenario~1.}
-    \label{tab:infocriteria}
-    \centering
-    \begin{tabular}{l|cc|ccc}
-    \hline
-    Model & N & K & BIC & AIC & AICc \\\hline
-    3-HP               & & 3 & -6191.00 & -6201.80 & -6201.89 \\
-    4-HP               & & 4 & -6185.59 & -6199.98 & -6200.14\\
-    5-HP               & & 5 & -6185.59 & -6199.98 & -6200.14\\\hline
-    \end{tabular}
-\end{table}
-%
-It can be seen that the kernel in Equation~\ref{eq:celkernel} used for this work is preferred over the more complex kernel used for modelling stellar variability. 
-
 \subsection{Faraday Challenge}
 \label{sec:challenges}
 
@@ -622,6 +565,7 @@ where $|F_i|$ is the magnitude of the Faraday depth spectrum at a Faraday depth,
 
 \begin{table}
 \caption{\label{tab:challengepriors}}
+\centering
 \begin{tabular}{|c|c|}
 \hline
 Hyper-parameter & Prior \\\hline
@@ -651,6 +595,81 @@ where $D$ are the input training data and all other quantities are as defined pr
 
 The results of these evaluations for the optimised GP approach are listed for each model in Table~\ref{tab:challenge}. It can be seen that the average reduced chi-squared statistic recovered from our model, $\chi^2_{\rm r} = XX$, is in very good agreement with the expected optimum value of $1.00\pm0.02$; however, the $RM_{\rm wtd}$ statistic is not in good agreement with the expected optimum value of $1.3\pm0.5$. This is due to the GP interpreting some low local structure in the noise fluctuations of the input data as signal, which is reflected as structure in the Faraday depth spectrum below the detection threshold described in \S~\ref{sec:usage}.  
 
+\subsection{Alternative kernels}
+\label{sec:infocrit}
+
+For a given regression problem, there are an infinite number of models that can be used. As such, it is usually not possible to test all possible models. Although different methods of evaluating competing models have been developed, the computational complexity involved in applying them limits their applicability. To overcome this limitation, easier-to-use approximate methods are commonly used to compare the performance of two or more models. These include the Bayesian Information Criterion (BIC), the Akaike Information Criterion (AIC) and the corrected Akaike Information Criterion (AICc) (Burnham \& Anderson 2004). These information criteria are designed to evaluate the amount of information lost by a particular model. The model that loses the least information (i.e. has the lowest valued information criterion) is considered to be the preferred model.
+
+The BIC is considered to be a powerful model selection tool when the `true' model is in the set of test models. For simulated data such as that used here, this is considered appropriate; however, in the case of true empirical data the AIC is considered to be a more appropriate criterion. Furthermore, the {\it corrected} AIC places a stronger complexity penalty on models used with finite data series than the original AIC. In the case of small sample sizes it is considered to be more appropriate and accurate for finding the preferred model. For a more detailed comparison of the different information criteria we refer the reader to Burnham \& Anderson (2002).
+
+To assess the performance of the GP model described in \S~\ref{sec:method} and denoted here as "3-HP" we compare it to (i) the quasi-periodic kernel used by Foreman-Mackey et al. (2017) used to model stellar variability, and (ii) a hybrid kernel including a second squared-exponential term. 
+
+In Foreman-Mackey et al. (2017), the period of rotation of a star was determined by extracting the optimised $P$ hyper-parameter, analogous to our use of $P$ to estimate the rotation measure of a Faraday thin source. The stellar variability kernel from Foreman-Mackey et al. (2017) is also built using the {\tt celerite} library and has the form,
+%
+\begin{equation}
+\label{eq:fmkernel}
+k(x_i,x_j)=\frac{B}{1+C}\,{\rm e}^{-A|x_i - x_j|}\left[\cos\left(\frac{2\pi|x_i - x_j|}{P}\right) + (1+C)\right],
+\end{equation}
+%
+where $A$, $B$, $C$ and $P$ are hyper-parameters. We denote this kernel as "4-HP".
+
+The hybrid kernel, denoted here as "5-HP", has the form,
+%
+\begin{equation}
+\label{eq:celkernel}
+k(x_i,x_j)=h_1\,{\rm e}^{-c_1|x_i - x_j|}\cos\left(\frac{2\pi|x_i - x_j|}{P}\right) + h_2\,{\rm e}^{-c_2|x_i - x_j|},
+\end{equation}
+%
+where $h_1$, $c_1$, $P$, $h_2$ and $c_2$ are hyper-parameters. This kernel has an extra term which is intended to model smoothly varying non-periodic behaviour such as that which might arise from Faraday thick components along the line of sight.
+
+Assuming a zero-valued mean function, we optimize the hyper-parameters for each of the kernels in Equation~\ref{eq:celkernel} (3 hyper-parameters) and for the kernel in Equation~\ref{eq:fmkernel} (4 hyper-parameters). We do this for all models in the Sun et~al. (2017) sample. No noise is added to these data and so we do not include the additive white noise term with either kernel. For each sample dataset we find the maximum likelihood using the method described in \S~\ref{sec:optimization} and use this value to compute the Bayesian Information Criteria (BIC; Schwarz et al. 1978),
+%
+\begin{equation}
+{\rm BIC} = -2 \log L^\ast + K \log N,
+\end{equation}
+%
+the Akaike Information Criterion (AIC; Akaike 1974),
+%
+\begin{equation}
+{\rm AIC} = 2 K - 2\log L^\ast,
+\end{equation}
+%
+and the corrected AIC (AICc; Hurvich \& Tsai 1989),
+%
+\begin{equation}
+{\rm AICc} = {\rm AIC} + \frac{2K(K+1)}{N - K - 1},
+\end{equation}
+%
+where $L^\ast$ is the maximum value of the likelihood, $K$ is the number of free parameters, and $N$ is the number of data points. The results of these tests, averaged over different models are shown in Table~\ref{tab:infocriteria} where it can be seen that the 5-HP kernel is strongly preferred for thin sources, but that the 3-HP and 4-HP kernels are preferred for the double and thick Faraday spectra. This suggests that different kernels may be used to optimise recovery of specific Faraday structures. 
+%
+\begin{table}
+\caption{Model comparison for Scenario~1.\label{tab:infocriteria}}
+    \centering
+    \begin{tabular}{l|cc|ccc}
+    \hline
+    Model & N & K & BIC & AIC & AICc \\\hline
+    \textbf{3-HP}               & 300 & 3 & \textbf{-4548.4} & \textbf{-4561.6} & \textbf{-4561.6} \\
+    {\it Thin}               & &   & -6920.5 & -6933.6 & -6933.7\\
+    {\it Double}               & &   & -3444.4 & -3457.6 & -3457.6\\
+    {\it Thick}               & &   & -5529.1 & -5542.3 & -5542.3 \\
+    \textbf{4-HP}               & 300 & 4 & \textbf{-4553.7} & \textbf{-4571.3} & \textbf{-4571.4}\\
+    {\it Thin}             & &   & -6913.6 & -6931.2& -6931.2\\
+    {\it Double}             & &   & -3456.4 & -3473.9 & -3474.0\\
+    {\it Thick}            & &   & -5526.6 & -5544.1 & -5544.2 \\
+    \textbf{5-HP}               & 300 & 5 & \textbf{-4551.2} & \textbf{-4573.2} & \textbf{-4573.3}\\
+    {\it Thin}            & &   & -6955.4 & -6977.4 & -6977.5\\
+    {\it Double}              & &   & -3442.5 & -3464.4 & -3464.5\\
+    {\it Thick}            & &   & -5519.9 & -5541.9 & -5542.0\\\hline
+    \end{tabular}
+\end{table}
+%
+%
+%\centerline{\includegraphics[width=0.33\textwidth]{./FIGURES/3hp_bp.png}\qquad\includegraphics[width=0.33\textwidth]{./FIGURES/4hp_bp.png}\qquad\includegraphics[width=0.33\textwidth]{./FIGURES/5hp_bp.png}}
+%\caption{\label{fig:boxplot}}
+%\end{figure*}
+
+
+
 \section{Conclusions}
 \label{sec:conclusions}
 
@@ -671,7 +690,7 @@ We suggest that GPM may be a more flexible alternative to traditional QU-fitting
 
 The Acknowledgements section is not numbered. Here you can thank helpful
 colleagues, acknowledge funding agencies, telescopes and facilities used etc.
-Try to keep it short.
+Try to keep it short. M.  C{\'a}rcamo  acknowledges  support  granted  by  CON-ICYT   PFCHA/DOCTORADO   BECAS   CHILE/2018-72190574.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
