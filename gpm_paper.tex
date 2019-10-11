@@ -43,6 +43,7 @@
 \usepackage{graphicx}	% Including figure files
 \usepackage{amsmath}	% Advanced maths commands
 \usepackage{amssymb}	% Extra maths symbols
+\usepackage{lscape}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -67,10 +68,8 @@ S.~W.~Ndiritu,$^{1}$\thanks{E-mail: simon.ndiritu@postgrad.manchester.ac.uk
  (SWN)}
 A.~M.~M.~Scaife$^{1}$,
 D.~Tabb$^{2}$,
-M.~C{\'a}rcamo$^{1,3}$,
-J.~Hanson$^{1}$ \&
-H.~Baird$^{1}$
-\\
+M.~C{\'a}rcamo$^{1,3}$ \&
+J.~Hanson$^{1}$ \\
 % List of institutions
 $^{1}$ Jodrell Bank Centre for Astrophysics, School of Physics and Astronomy, University of Manchester, Alan Turing Building,\\ Oxford Road, Manchester, M13 9PL, UK \\
 $^{2}$ Jodrell Bank Centre for Astrophysics, School of Physics and Astronomy, University of Manchester, Alan Turing Building,\\ Oxford Road, Manchester, M13 9PL, UK \\
@@ -81,7 +80,7 @@ $^{3}$ Departamento de Ingenier\'ia Inform\'atica, Universidad de Santiago de Ch
 \date{Accepted XXX. Received YYY; in original form ZZZ}
 
 % Enter the current year, for the copyright statements etc.
-\pubyear{2015}
+\pubyear{2019}
 
 % Don't change these lines
 \begin{document}
@@ -133,20 +132,14 @@ known as the rotation measure transfer function, RTMF$(\phi)$. Consequently, the
 
 These issues are of particular importance when complex or compound Faraday structures are seen along a single line of sight. In a blind data challenge comparing different methods for extracting the parameters of Faraday structures, Sun et~al. (2014) noted that RM synthesis was highly prone to missing composite Faraday structures and that the $\sim$25\% of extragalactic sources seen observationally to have such structures (e.g. Law et al. 2011) was likely to be an underestimate. Sun et~al. concluded that when Faraday complexity is present, only QU-fitting methods will produce results that do not introduce extraneous scatter in recovered RM values. Such QU-fitting methods (e.g. Farnsworth et al. 2011; O'Sullivan et al. 2012; Ideguchi et al. 2014) model the observed polarization, $\tilde{P}(\lambda^2)$, directly rather than decomposing Faraday depth spectra to recover parameters. However, whilst QU-fitting methods can be more reliable for recovering composite structures, in particular those including Faraday thick components, they rely on physically parametrised models of the synchrotron-emitting and Faraday rotating media along the line of sight to be known a priori. 
 
-In this work we explore the potential for using a Gaussian Process Modelling (GPM) approach to improve both the interpretation of Faraday depth spectra and the recovery of physical parameters from polarization measurements. In its simplest form, a GPM approach can be considered part of the family of QU-fitting methods; however, it has certain advantages over physically parameterised model-fitting methods, which include both a robustness to using non-exact models for imperfectly known datasets and an ability to provide predictive models for imputation including posterior variances.  The contents of this paper are as follows, in \S~\ref{sec:method} we describe the underlying GPM methodology including a description of the covariance kernel functions employed and the optimization of their hyper-parameters; in \S~\ref{sec:sims} we illustrate the use of the method on simulated data and in \S~\ref{sec:realdata} we demonstrate the method using real data from the MeerKAT telescope; in \S~\ref{sec:disc} we discuss the implications of these results and compare the outputs to those using a more traditional RM Synthesis approach.
+In this work we explore the potential for using a Gaussian Process Modelling (GPM) approach to improve both the interpretation of Faraday depth spectra and the recovery of physical parameters from polarization measurements. In its simplest form, a GPM approach can be considered part of the family of QU-fitting methods; however, it has certain advantages over physically parameterised model-fitting methods, which include both a robustness to using non-exact models for imperfectly known datasets and an ability to provide predictive models for imputation including posterior variances.  The contents of this paper are as follows, in \S~\ref{sec:method} we describe the underlying GPM methodology including a description of the covariance kernel functions employed and the optimization of their hyper-parameters; in \S~\ref{sec:sims} we illustrate the use of the method on different Faraday structures and in \S~\ref{sec:meerkat} we demonstrate the method using a simulated polarized source population for the MeerKAT radio telescope; in \S~\ref{sec:disc} we discuss the implications of these results and draw our conclusions.
 
 \section{Gaussian Process Modelling for Faraday Depth Reconstruction}
 \label{sec:astrogpm}
 
 Gaussian Processes (GPs) are probabilistic non-parametric models that can be used for a variety of regression and classification problems. A Gaussian Process Model (GPM) can be used to describe a given dataset by assuming a priori that the data themselves represent a realisation of a stochastic process described by a multi-variate Gaussian distribution. Such models are non-parametric as the Gaussian process (GP) is a prior on the data itself rather than on a parametric model, i.e. the complexity of the model grows with the inclusion of additional data points. GPMs are considered to be an attractive solution when modelling systems where the degree of complexity required by a parametric model is not necessarily supported by the amount of information in the observations. Overly complex parametric models are prone to over-fitting and can lead to misinterpretation of the data. In contrast, Gaussian processes are flexible probabilistic regression models that do not require exact knowledge of the underlying physical model and can also provide posterior uncertainties that naturally reflect high uncertainty in regions of data space where there are few observational constraints.
 
-\textcolor{green}{This section needs rewording - just copied and pasted from previous papers at the moment.}
-
-Gaussian Process Modelling (GPM) has been used widely in astronomy, for example in cosmic microwave background estimation (Bond \& Efstathiou 1987; Bond et al. 1999; Wandelt \& Hansen 2003), modelling correlated instrumental noise (Gibson et al. 2012), and for spectroscopic calibration (Evans et al. 2015; Czekala et al. 2017).
-
-More recently, GPs have been used in the stellar and exoplanet fields within astronomy to capture stellar variability or instrumental systematics (see e.g. Gibson et al. 2012; Dawson et al. 2014; Haywood et al. 2014; Barclay et al. 2015; Czekala et al. 2015; Evans et al. 2015; Haywood 2015; Rajpaul et al. 2015; Vanderburg et al. 2015; Aigrain, Parviainen \& Pope 2016; Rajpaul, Aigrain \& Roberts 2016; Littlefair et al. 2017). They are useful in regression problems involving any stochastic process, specifically when the probability distribution for the process is a multivariate Gaussian.
-
-%Here we extend the application of GPM from time series modelling to that of the {\it frequency} series modelling required for studies of cosmic magnetism using Faraday rotation.
+In astrophysics, Gaussian processes have been used in various applications including in the study of photometric redshifts (Way et al. 2009), variability in stellar light curves (Angus et al. 2017), eclipses in cataclysmic variable stars (McAllister et al. 2016), transmission spectroscopy of extrasolar planets (P. Gibson et al. 2011), and radio velocity studies for planetary candidates (Rajpaul et al. 2015). It has also been used extensively in cosmic microwave background analysis (Bond \& Efstathiou 1987; Bond et al. 1999; Wandelt \& Hansen 2003), as well as for modelling instrumental systematics and calibration (e.g. Gibson et al. 2012; Dawson et al. 2014; Haywood et al. 2014; Barclay et al. 2015; Czekala et al. 2015; Evans et al. 2015; Haywood 2015; Rajpaul et al. 2015; Vanderburg et al. 2015; Aigrain, Parviainen \& Pope 2016; Rajpaul, Aigrain \& Roberts 2016; Littlefair et al. 2017). Here we consider the use of GPM for the reconstruction and interpretation of complex polarization data, specifically in the context of Faraday depth structure. 
 
 \subsection{GPM for imputation of missing polarization data}
 \label{sec:imputation}
@@ -311,10 +304,6 @@ and to increase the sensitivity to extended Faraday structures,
 \section{Application to Simulated Data}
 \label{sec:sims}
 
-\subsection{Observational Parameters}
-\label{sec:meerkat}
-
-
 \subsection{Example scenarios}
 \label{sec:scenarios}
 
@@ -454,7 +443,7 @@ The effect of the flagging process on the Faraday depth spectrum is shown for Sc
 %
 \begin{figure*}
 \centerline{\includegraphics[width=0.95\textwidth]{./FIGURES/figure6.png}}
-\caption{\label{fig:flagging1} Faraday depth spectra for Scenario~1 (Faraday thin) with 20\% (top), 30\% (middle) and 40\% (bottom) of channel data flagged and ${\rm SNR}_{\rm chan} = 1$. Left: Faraday depth spectrum from flagged data. Right: Faraday depth spectra from GPM reconstructed data as described in \S~\ref{sec:missing}. The true Faraday depth is marked as a vertical line (dark grey).}
+\caption{\label{fig:flagging1} Faraday depth spectra for Scenario~1 (Faraday thin) with 20\% (top), 30\% (middle) and 40\% (bottom) of channel data flagged and ${\rm SNR}_{\rm chan} = 1$. Left: Faraday depth spectrum from flagged data. Right: Faraday depth spectra from GPM reconstructed data as described in \S~\ref{sec:missing}. The $\pm$5\,$\sigma_{\phi}$ limits are shown as a light grey shaded area.}
 \end{figure*}
 
 
@@ -473,7 +462,7 @@ In this case, recovering the Faraday depth of the thin component is not as stron
 \begin{figure*}
 %\centerline{Original data \hskip 0.45\textwidth Imputed data}
 \centerline{\includegraphics[width=0.95\textwidth]{./FIGURES/figure8.png}}
-\caption{\label{fig:flagging2} Faraday depth spectra for Scenario~2 (Faraday complex) with 20\% (top), 30\% (middle) and 40\% (bottom) of channel data flagged and ${\rm SNR}_{\rm chan, U} = 1$. Left: Faraday depth spectrum from flagged data. Right: Faraday depth spectra from GPM reconstructed data as described in \S~\ref{sec:missing}. The input Faraday depth spectrum is marked by solid lines (dark grey).}
+\caption{\label{fig:flagging2} Faraday depth spectra for Scenario~2 (Faraday complex) with 20\% (top), 30\% (middle) and 40\% (bottom) of channel data flagged and ${\rm SNR}_{\rm chan, U} = 1$. Left: Faraday depth spectrum from flagged data. Right: Faraday depth spectra from GPM reconstructed data as described in \S~\ref{sec:missing}. The $\pm$5\,$\sigma_{\phi}$ limits are shown as a light grey shaded area.}
 \end{figure*}
 
 %\subsection{Recovery of Faraday Thick Structure}
@@ -504,29 +493,83 @@ As described in Sun et~al. (2014), it is expected that many lines of sight will 
 \section{Performance considerations for surveys}
 \label{sec:joedata}
 
-We now extend the application to simulated data to a large data set, such as might be recovered from a MeerKAT observation of a survey field. We use a simulated data set containing Stokes~Q and Stokes~U data for 10,000 Faraday thin sources. Observational parameters are matched to those of the MeerKAT telescope, one of the precursor arrays of the Square Kilometre Array (SKA) (Dewdney et al. 2009, Jonas 2009). The MeerKAT consists of 64 13.5\,m parabolic dishes sited in the Northern Cape province of South Africa. 
+We now extend the application to simulated data to a large data set, such as might be recovered from a MeerKAT observation of a survey field. We use a simulated data set containing Stokes~Q and Stokes~U data for 10,000 Faraday thin sources. Observational parameters are matched to those of the MeerKAT telescope, one of the precursor arrays of the Square Kilometre Array (SKA) (Dewdney et al. 2009, Jonas 2009). The MeerKAT consists of 64 13.5\,m parabolic dishes sited in the Northern Cape province of South Africa (Jonas 2016, Taylor \& Jarvis 2017). 
 
-Polarization surveys for the MIGHTEE survey [REF] are expected to be conducted in the MeerKAT mid-frequency band ($0.90 - 1.67$\,GHz) using 135 frequency channels across the band. This results in a channel width of $\delta\nu \approx 6$\,MHz. The sensitivity of the MeerKAT is expected to be 12\,$\mu$Jy for a 6\,hour observation, which is equivalent to a noise of $\sigma_{\nu} = 140\,\mu$Jy per channel. The relevant parameters of the MeerKAT for this work are as shown in Table~\ref{tab:meerkat} (Jonas 2016, Taylor \& Jarvis 2017).
+%Polarization surveys for the MIGHTEE survey [REF] are expected to be conducted in the MeerKAT mid-frequency band ($0.90 - 1.67$\,GHz) using 135 frequency channels across the band. This results in a channel width of $\delta\nu \approx 6$\,MHz. The relevant parameters of the MeerKAT for this work are as shown in Table~\ref{tab:meerkat} .
+
+10,000 Faraday thin sources were created with an RM taken from a uniform distribution between -100 and +100\,rad\,m$^{-2}$. Stokes~Q and U values were generated for 135 frequency channels spaced uniformly in wavelength from 0.86\,GHz to 1.70\,GHz. The intrinsic angle of polarisation for each source, $\chi_0$, was sampled randomly from a uniform distribution $[-\pi, +\pi)$. 
+%Each polarisation spectrum was then used to find the Faraday spectrum for each source using RM Synthesis \cite{2005A&A...441.1217B}. 
+
+
+At each frequency, noise was added to the Stokes~Q and U values using a normal distribution with a mean of zero and a variance of $1.32\times10^{-6}$\,Jy\,beam$^{-1}$, which was calculated using
 %
-\begin{table}
-\caption{\label{tab:meerkat}}
-\begin{tabular}{|l|c|c|c|c|}
-\hline
-& $\Delta \lambda^2$ & $\lambda^2_{\rm min}$ & $\delta \phi$ & $|\phi_{\rm max-scale}|$ \\\hline
-$0.58 - 1.01$\,GHz & 0.179 & 0.088 & 19.35 & 35.70\\
-$0.90 - 1.67$\,GHz & 0.079 & 0.032 & 43.85 & 98.17\\
-$1.75 - 2.50$\,GHz & 0.015 & 0.014 & 230.94 & 224.40\\\hline
-\end{tabular}
-\end{table}
+\begin{equation}
+\label{eq:S_rms}
+S_{\rm rms} = \frac{2 k_{\rm B} T}{A\eta \sqrt{n_{\rm a}(n_{\rm a} - 1) \Delta \nu\tau_0}} \frac{w_{\rm rms}}{w_{\rm mean}},
+\end{equation}
+%
+where $k_{\rm B}$ is Boltzmann's constant, the sensitivity is $\eta A/T = 220$\,m$^2$/K (\cite{2012AfrSk..16..101B}), $n_{\rm a}$ is the number of antennas, $\Delta \nu$ is the frequency channel width, and $\tau_0$ is the observation integration time. The integration time is assumed to be one hour, and the ratio ${w_{\rm rms}}/{w_{\rm mean}}$ is assumed to be unity, equivalent to natural weighting. This simulated data does not include any instrumental polarization leakage between the Stokes parameters.
 
-The simulated Faraday thin sources have a range of rotation measure values drawn from a uniform distribution, $-100<RM<100$\,rad\,m$^{-2}$. The amplitude of the polarized intensity for these sources is drawn from the 1.4\,GHz source counts model of [REF] and the values in the dataset range from 47\,$\mu$Jy to 28\,mJy. 
+Values for Stokes~I were taken informed by the extragalactic source counts models in \cite{2010A&ARv..18....1D}, which are shown in Figure \ref{fig:SourceCounts1}. These models cover flux density values up to 1\,Jy for Star Forming Galaxies (SFGs), and up to 148.4\,Jy for Active Galactic Nuclei (AGN). 
+%
+\begin{figure}
+\centering
+\includegraphics[width=0.45\textwidth]{./FIGURES/SourceCounts1.png}
+\caption{\label{fig:SourceCounts1} Contributions from different source populations at 1.4\,GHz used for the simulations here. \cite{2010A&ARv..18....1D}. }
+\end{figure}
+
+The frequency-dependence of the flux density values were simulated with a frequency dependence of
+%
+\begin{equation}
+\label{FreqDependent}
+S_{\nu} = S_{\rm 1.4\,GHz}\left(\frac{\nu}{\rm 1.4\,GHz} \right)^{-\alpha},
+\end{equation}
+%
+where $S_\nu$ is the flux density at each frequency, $\nu$, $S_{1.4\GHz}$ is the flux density at 1.4\,GHz, and $\alpha$ is the spectral index, which is taken to be the canonical value of $\alpha$ = 0.7 for synchrotron radiation. 
+
+The intensity of the polarised signal $P$ is given by
+%
+\begin{equation}
+\label{eq:PolarisedSignal}
+P = \sqrt{Q^2 + U^2} = I*\Pi,
+\end{equation}
+%
+where $Q$ and $U$ are the Stokes parameters for linear polarisation, $I$ is the total intensity Stokes parameter, and $\Pi$ is the polarisation fraction. To simulate values for $\Pi$, the following relationship was used,
+%
+\begin{equation}
+\label{eq:StilEquation}
+\log \Pi_{0,{\rm med}} = −(0.051 \pm 0.004) \log S_{\rm 1.4\,GHz} + (0.388 \pm 0.007)
+\end{equation}
+%
+\cite{Stil_2014}, where $\Pi_{0, {\rm med}}$ is the median percentage polarisation fraction and $S_{\rm 1.4\,GHz}$ is the 1.4\,GHz flux density in mJy. 
+
+%Figure \ref{fig:PolfracVsFluxDensity} shows how the polarisation fraction varies with the flux density according to Equation~\ref{eq:StilEquation}. 
+%
+%\begin{figure}
+%\centering
+%\includegraphics[width=0.45\textwidth]{./FIGURES/PolfracVsFluxDensity.png}
+%\caption{\label{fig:PolfracVsFluxDensity} Plot of the polarisation fraction values determined from Eq. \ref{eq:StilEquation}, which were used in simulating data here. The red line shows  Eq. \ref{eq:StilEquation} itself plotted, and the dotted blue lines show example results for 10,000 generated sources simulated in the same way as those used in the dataset uses here. This is done to provide some context and intuition regarding the relative frequency of the polarisation fraction and flux density values in the simulated data.}
+%\end{figure}
+%
+%\begin{table}
+%\caption{\label{tab:meerkat}}
+%\begin{tabular}{|l|c|c|c|c|}
+%\hline
+%& $\Delta \lambda^2$ & $\lambda^2_{\rm min}$ & $\delta \phi$ & $|\phi_{\rm max-scale}|$ \\\hline
+%$0.58 - 1.01$\,GHz & 0.179 & 0.088 & 19.35 & 35.70\\
+%$0.90 - 1.67$\,GHz & 0.079 & 0.032 & 43.85 & 98.17\\
+%$1.75 - 2.50$\,GHz & 0.015 & 0.014 & 230.94 & 224.40\\\hline
+%\end{tabular}
+%\end{table}
+
+We randomly select 500 sources from this population and use an optimised GP with the kernel specified in Equation~\ref{eq:celkernel} to recover the rotation measure for each object. We use a prior range of $\mathcal{U}(-25,+5)$ for all hyper-parameters in log space.  The distribution of recovered RM values is shown in Figure~\ref{fig:survey}, where it is compared to the known input values. It can be seen that the rotation measures are recovered with consistently good accuracy. The average run time per object is 43\,seconds on a Macbook Pro with a 3.5\,GHz Intel Core i7 processor.
 %
 \begin{figure*}
 \includegraphics[width=0.9\textwidth]{./FIGURES/figure9.png}
-\caption{\label{fig:survey}}
+\caption{\label{fig:survey} Comparison between the true input RM value and the RM value recovered by the optimised GP for each of the sources in the MeerKAT simulation. See \S~\ref{sec:joedata} for details.}
 \end{figure*}
 
-Data flagging for the MeerKAT in this band is expected to remove approximately $20-30\%$ of the bandwidth due to radio frequency interference from satellites. 
+%Data flagging for the MeerKAT in this band is expected to remove approximately $20-30\%$ of the bandwidth due to radio frequency interference from satellites. 
 
 
 
@@ -543,9 +586,12 @@ If the optimized GPM was used to predict the posterior mean only at the position
 \subsubsection{Recovery of Faraday thick structure}
 \label{sec:thick}
 
-As can be seen in Figure~\ref{fig:scen2extend}, using an optimized GP to predict the complex polarization signal at smaller values of $\lambda^2$ than are present in the original dataset can be beneficial for recovering extended structure in Faraday depth space. When used to predict the behaviour of a signal outside the range of measurements, the posterior covariance of a GP will increase in response to the stationary nature of the covariance not finding any additional measurements to anchor it. This increase in covariance can be used to down-weight predicted values of the posterior mean, relative to those known with more confidence. At large separations from the measured data, where no information on appropriate covariances is present in the GP model, the prediction will tend towards the mean function. For cases where the mean function is assumed to be zero-valued, this is equivalent to the same logical sampling as in the original dataset. 
+As can be seen in Figure~\ref{fig:flagging2}, using an optimized GP to improve the interpretability of the Faraday depth spectrum in the case where Faraday thick structure is present can reveal these structures without the need for assuming any specific parametric model of Faraday depth a priori. Although it is not possible to recover the parameterised geometry of the thick structure from the hyper-parameters of the GP in this case, the shape is far more clearly delineated in the GP-reconstructed Faraday depth spectrum than in the spectrum calculated from the original data. This remains the case even in the presence of high degrees of RFI excision.
+
+In principle, GPs might also be used to predict the complex polarization signal at smaller values of $\lambda^2$ than are present in the original dataset, which could be beneficial for recovering extended structure in Faraday depth space. When used to predict the behaviour of a signal outside the range of measurements, the posterior covariance of a GP will increase in response to the stationary nature of the covariance not finding any additional measurements to anchor it. This increase in covariance can be used to down-weight predicted values of the posterior mean, relative to those known with more confidence. The behaviour of the prediction will tend towards the mean function and in the general case where the mean function is assumed to be zero-valued, this is equivalent to the same logical sampling as in the original dataset; however, for spectra where Faraday thick structure are present, which have non-zero means at low-$\lambda^2$ this may artificially truncate structure. This was found to be the case here for the kernel in Equation~\ref{eq:celkernel} when used to extend $\lambda^2$-space as illustrated in Figure~\ref{fig:resampling}.
 
 It is also important to note that structures which exist only on scales larger than that set by the measured $\lambda^2_{\rm min}$ will {\it not} be recovered by a GP model used for prediction outside the range of the original measurements. Hence this form of structure enhancement for Faraday thick structures can only be used to improve the recovery of structures which exist on scales that are already sampled in part by the original measurements. Any larger structures will not appear in the Faraday depth spectrum of the GP reconstruction, an effect analogous to flux loss in synthesis imaging for radio interferometry. 
+
 
 \subsubsection{Polarization leakage}
 \label{sec:leakage}
@@ -564,7 +610,7 @@ RM_{\rm wtd} = \frac{\sum_{i}{|F_i|\phi_i}}{\sum_{i}{|F_i|}},
 where $|F_i|$ is the magnitude of the Faraday depth spectrum at a Faraday depth, $\phi_i$. The quantity, $RM_{\rm wtd}$, is a strong function of the range of Faraday depth in the calculated spectrum and should not be used without differencing against a reference spectrum.
 
 \begin{table}
-\caption{\label{tab:challengepriors}}
+\caption{\label{tab:challengepriors} Range of uniform priors used for each of the hyper-parameters in the Faraday challenge, see \S~\ref{sec:challenges} for details.}
 \centering
 \begin{tabular}{|c|c|}
 \hline
@@ -576,8 +622,9 @@ $\ln \sigma$ & (-2,2)\\\hline
 \end{tabular}
 \end{table}
 %
-We evaluate the performance of the GP approach using the 16 models from Sun et~al. (2017). These models include examples of single Faraday thin objects, multiple (two) Faraday thin objects, and combinations of a Faraday thick and Faraday thin objects. The parameters for each model are listed in Table~\ref{tab:challenge} and we use the same method as described in \S~\ref{sec: } with hyper-parameter priors as given in Table~\ref{tab:challengepriors}. The reduced $\chi^2$ for parametric models described in 
-Sun et~al. (2017) is roughly equivalent to the standardized mean squared error (SMSE). For an optimised GP, the SMSE is defined as
+We evaluate the performance of the GP approach using the 16 models from Sun et~al. (2017). These models include examples of single Faraday thin objects, multiple (two) Faraday thin objects, and combinations of a Faraday thick and Faraday thin objects. 
+%The parameters for each model are listed in Table~\ref{tab:challenge} and we use the same method as described in \S~\ref{sec: } with hyper-parameter priors as given in Table~\ref{tab:challengepriors}. 
+The reduced $\chi^2$ for parametric models described in Sun et~al. (2017) is roughly equivalent to the standardized mean squared error (SMSE). For an optimised GP, the SMSE is defined as
 %
 \begin{equation}
 SMSE = \frac{1}{2N}\left[ \frac{(P_{\ast} - P(\lambda^2_{\ast}))^2}{\sigma_{\rm n}^2}  \right],
@@ -585,7 +632,7 @@ SMSE = \frac{1}{2N}\left[ \frac{(P_{\ast} - P(\lambda^2_{\ast}))^2}{\sigma_{\rm 
 %
 where $P_{\ast}$ is the posterior mean prediction of complex polarization from the optimized GP, $P(\lambda^2_{\ast})$ is the input complex polarization, and $\sigma_{\rm n}^2$ is the variance of the white noise on the input data. There is a factor of two in the denominator of the normalisation in order to account for the independence of the white noise between Stokes~Q and U. The difference between this quantity and the $\chi^2_{\rm r}$ used by Sun et al. (2017) is the normalisation, which uses $2N-K$ in the demoninator where $K$ is the number of parameters. Although the GP used here is not strictly parametric, we calculate this quantity using $K=4$ to represent the number of hyper-parameters in our model. 
 
-In addition to the SMSE, we also define the {\it mean standardised log loss} as a measure of the prediction quality. As described by Rasmussen \& Williams (2004), this quantity is the difference between the negative log likelihood for the optimized GP, given by,
+In addition to the median reduced chi-squared statistic, we also define the {\it mean standardised log loss} (MSLL) as a measure of the prediction quality. As described by Rasmussen \& Williams (2004), this quantity is the difference between the negative log likelihood for the optimized GP, given by,
 %
 \begin{equation}
 -\log p(P_{\ast} | D, \lambda^2_{\ast}) = \frac{1}{2}\log(2\pi \sigma_{\ast}) + \frac{(P_{\ast} - P(\lambda^2_{\ast}))^2}{2\sigma_{\ast}^2},
@@ -593,7 +640,7 @@ In addition to the SMSE, we also define the {\it mean standardised log loss} as 
 %
 where $D$ are the input training data and all other quantities are as defined previously, and the negative log likelihood for a reference model defined as Gaussian noise with a mean and variance equivalent to those of the noisy input data. 
 
-The results of these evaluations for the optimised GP approach are listed for each model in Table~\ref{tab:challenge}. It can be seen that the average reduced chi-squared statistic recovered from our model, $\chi^2_{\rm r} = XX$, is in very good agreement with the expected optimum value of $1.00\pm0.02$; however, the $RM_{\rm wtd}$ statistic is not in good agreement with the expected optimum value of $1.3\pm0.5$. This is due to the GP interpreting some low local structure in the noise fluctuations of the input data as signal, which is reflected as structure in the Faraday depth spectrum below the detection threshold described in \S~\ref{sec:usage}.  
+The median of the reduced chi-squared statistic recovered from our model, $\chi^2_{\rm r} = 0.99$, is in very good agreement with the expected optimum value of $1.00\pm0.02$ from Sun et~al. (2014), which is also consistent with the value of the $MSLL= -0.90$; however, the median $RM_{\rm wtd}=4.88$ statistic is not in good agreement with the expected optimum value of $1.3\pm0.5$. This is due to the GP interpreting some low local structure in the noise fluctuations of the input data as signal, which is reflected as structure in the Faraday depth spectrum below the detection threshold described in \S~\ref{sec:usage}. 
 
 \subsection{Alternative kernels}
 \label{sec:infocrit}
@@ -602,7 +649,7 @@ For a given regression problem, there are an infinite number of models that can 
 
 The BIC is considered to be a powerful model selection tool when the `true' model is in the set of test models. For simulated data such as that used here, this is considered appropriate; however, in the case of true empirical data the AIC is considered to be a more appropriate criterion. Furthermore, the {\it corrected} AIC places a stronger complexity penalty on models used with finite data series than the original AIC. In the case of small sample sizes it is considered to be more appropriate and accurate for finding the preferred model. For a more detailed comparison of the different information criteria we refer the reader to Burnham \& Anderson (2002).
 
-To assess the performance of the GP model described in \S~\ref{sec:method} and denoted here as "3-HP" we compare it to (i) the quasi-periodic kernel used by Foreman-Mackey et al. (2017) used to model stellar variability, and (ii) a hybrid kernel including a second squared-exponential term. 
+To assess the performance of the GP model described in \S~\ref{sec:method} and denoted here as ``3-HP" we compare it to (i) the quasi-periodic kernel used by Foreman-Mackey et al. (2017) used to model stellar variability, and (ii) a hybrid kernel including a second squared-exponential term. 
 
 In Foreman-Mackey et al. (2017), the period of rotation of a star was determined by extracting the optimised $P$ hyper-parameter, analogous to our use of $P$ to estimate the rotation measure of a Faraday thin source. The stellar variability kernel from Foreman-Mackey et al. (2017) is also built using the {\tt celerite} library and has the form,
 %
@@ -611,9 +658,9 @@ In Foreman-Mackey et al. (2017), the period of rotation of a star was determined
 k(x_i,x_j)=\frac{B}{1+C}\,{\rm e}^{-A|x_i - x_j|}\left[\cos\left(\frac{2\pi|x_i - x_j|}{P}\right) + (1+C)\right],
 \end{equation}
 %
-where $A$, $B$, $C$ and $P$ are hyper-parameters. We denote this kernel as "4-HP".
+where $A$, $B$, $C$ and $P$ are hyper-parameters. We denote this kernel as ``4-HP".
 
-The hybrid kernel, denoted here as "5-HP", has the form,
+The hybrid kernel, denoted here as ``5-HP", has the form,
 %
 \begin{equation}
 \label{eq:celkernel}
@@ -643,7 +690,7 @@ and the corrected AIC (AICc; Hurvich \& Tsai 1989),
 where $L^\ast$ is the maximum value of the likelihood, $K$ is the number of free parameters, and $N$ is the number of data points. The results of these tests, averaged over different models are shown in Table~\ref{tab:infocriteria} where it can be seen that the 5-HP kernel is strongly preferred for thin sources, but that the 3-HP and 4-HP kernels are preferred for the double and thick Faraday spectra. This suggests that different kernels may be used to optimise recovery of specific Faraday structures. 
 %
 \begin{table}
-\caption{Model comparison for Scenario~1.\label{tab:infocriteria}}
+\caption{Kernel comparison for the 16 Faraday challenge models.\label{tab:infocriteria}}
     \centering
     \begin{tabular}{l|cc|ccc}
     \hline
@@ -656,9 +703,9 @@ where $L^\ast$ is the maximum value of the likelihood, $K$ is the number of free
     {\it Thin}             & &   & -6913.6 & -6931.2& -6931.2\\
     {\it Double}             & &   & -3456.4 & -3473.9 & -3474.0\\
     {\it Thick}            & &   & -5526.6 & -5544.1 & -5544.2 \\
-    \textbf{5-HP}               & 300 & 5 & \textbf{-4551.2} & \textbf{-4573.2} & \textbf{-4573.3}\\
+    \textbf{5-HP}               & 300 & 5 & \textbf{-4561.6} & \textbf{-4583.6} & \textbf{-4583.7}\\
     {\it Thin}            & &   & -6955.4 & -6977.4 & -6977.5\\
-    {\it Double}              & &   & -3442.5 & -3464.4 & -3464.5\\
+    {\it Double}              & &   & -3460.2 & -3482.2 & -3482.3\\
     {\it Thick}            & &   & -5519.9 & -5541.9 & -5542.0\\\hline
     \end{tabular}
 \end{table}
@@ -667,8 +714,9 @@ where $L^\ast$ is the maximum value of the likelihood, $K$ is the number of free
 %\centerline{\includegraphics[width=0.33\textwidth]{./FIGURES/3hp_bp.png}\qquad\includegraphics[width=0.33\textwidth]{./FIGURES/4hp_bp.png}\qquad\includegraphics[width=0.33\textwidth]{./FIGURES/5hp_bp.png}}
 %\caption{\label{fig:boxplot}}
 %\end{figure*}
-
-
+%
+Using the same noise parameters as in \S~\ref{sec:challenges}, the goodness of fit statistics for the 16 models using the two alternative kernels are $\chi^2_{\rm r} = 1.01$, $MSLL=-0.94$ and $RM_{\rm wtd}=3.62$, for the 4-HP model, and $\chi^2_{\rm r} = 0.97$, $MSLL=-0.81$ and $RM_{\rm wtd}=4.98$, for the 5-HP model. 
+These equally high values of the median $RM_{\rm wtd}$ statistic indicate that the 4-HP and 5-HP kernels are also over-fitting the data to some extent. Repeated fits to the Faraday challenge models with different noise realisations show that the 5-HP kernel has a consistently higher $RM_{\rm wtd}$ value than the 4-HP and 3-HP kernels, suggesting that its additional flexibility is a disadvantage in the presence of noise.
 
 \section{Conclusions}
 \label{sec:conclusions}
@@ -688,9 +736,7 @@ We suggest that GPM may be a more flexible alternative to traditional QU-fitting
 
 \section*{Acknowledgements}
 
-The Acknowledgements section is not numbered. Here you can thank helpful
-colleagues, acknowledge funding agencies, telescopes and facilities used etc.
-Try to keep it short. M.  C{\'a}rcamo  acknowledges  support  granted  by  CON-ICYT   PFCHA/DOCTORADO   BECAS   CHILE/2018-72190574.
+SWN acknowledges support from the UK Newton Fund via the Science \& Technology Facilities Council (STFC) through the Development in Africa with Radio Astronomy (DARA) Big Data project. JH acknowledges support from the UK Science \& Technology Facilities Council (STFC). MC acknowledges support from CONICYT PFCHA/DOCTORADO BECAS CHILE/2018-72190574.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -715,40 +761,41 @@ Others S., 2012, Journal of Interesting Stuff, 17, 198
 
 %%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%%%%
 
-\appendix
+%\appendix
 
-\section{Faraday challenge models}
+%\section{Faraday challenge models}
 
-\newcommand\Tstrut{\rule{0pt}{2.6ex}}       % top strut
-\newcommand\Bstrut{\rule[-1.1ex]{0pt}{0pt}} % bottom strut
+%\newcommand\Tstrut{\rule{0pt}{2.6ex}}       % top strut
+%\newcommand\Bstrut{\rule[-1.1ex]{0pt}{0pt}} % bottom strut
 
-\begin{table*}
-\caption{\label{tab:challenge}}
-\begin{tabular}{@{\extracolsep{4pt}}|l|c|c|c|c|c|c|c|c|c|c|c|c|c|@{}}
-\hline
- & \multicolumn{9}{c}{Input Parameters} & \multicolumn{4}{c}{Evaluation Metrics} \\
-  \cline{2-9}  \cline{10-14}
- & $p_1$ & $\phi_1$ & $\chi_1$ & $p_2$ & $\phi_2$ & $\chi_2$ & $p_0$ & $\phi_{\rm c}$ & $\phi_{\rm s}$ & $\chi^2_r$ & SMSE & MSLL & RM$_{\rm wtd}$ \Tstrut\\
- & $\%$ & rad\,m$^{-2}$ & deg & $\%$ & rad\,m$^{-2}$ & deg & $\%$ & rad\,m$^{-2}$ & rad\,m$^{-2}$ & & & & \\\hline
-Model 1 & 100.00 & 500.10 & 40.00 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & & & &  \\
-Model 2 & 100.00 & 49.38 & 60.00 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & & & &   \\
-Model 3 & 100.00 & 4.96 & 60.00 &  $-$ &  $-$ &  $-$ & $-$ & $-$ & $-$  & & & &  \\
-Model 4 & 25.00 & $-37.84$ & 0.00 & 16.70 & 103.18 & $-36.00$ & $-$ & $-$ & $-$  & & & &  \\
-Model 5 & 25.00 & $-37.84$ & $-40.00$ & 24.00 & 5.05 & $-40.00$ & $-$ & $-$ & $-$  & & & &  \\
-Model 6 & 25.00 & $-37.84$ & $-40.00$ & 9.00 & 5.05 & $-40.00$ & $-$ & $-$ & $-$  & & & &  \\
-Model 7 & 25.00 & $-44.55$ & 0.00 & 16.70 & 37.50 & 72.00 & $-$ & $-$ & $-$  & & & &  \\
-Model 8 & 25.00 & 232.56 & 40.00 & 9.00 & 192.70 & 40.00 &&&  & & & & \\
-Model 9 & 25.00 & $-37.83$ & $-40.00$ & 16.50 & 5.05 & 140.00 & $-$ & $-$ & $-$  & & & & \\
-Model 10 & 25.00 & $-37.84$ & 0.00 & 9.00 & 103.00 & $-36.00$ & $-$ & $-$ & $-$   & & & & \\
-Model 11 & 25.00 & 149.50 & $40.00$ & 23.75 & 163.50 & $-68.00$ & $-$ & $-$ & $-$   & & & & \\
-Model 12 & 25.00 & $-232.56$ & 0.00 & 9.00 & $-50.10$ & 72.00 & $-$ & $-$ & $-$  & & & &  \\
-Model 13 & 25.00 & $-44.55$ & 0.00 & 24.00 & 37.54 & 72.00 & $-$ & $-$ & $-$   & & & & \\
-Model 14 &  $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.90 & $-136.98$ & 50.00  & & & & \\
-Model 15 & 1.80 & $-240.22$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 50.00  & & & & \\
-Model 16 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.90 & $-136.98$ & 25.00  & & & & \\
-Model 17 & 1.80 & $-240.00$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 25.00  & & & & \\\hline
-\end{tabular}
-\end{table*}
+%\begin{table*}
+%\caption{\label{tab:challenge}}
+%\begin{tabular}{@{\extracolsep{4pt}}|l|c|c|c|c|c|c|c|c|c|c|c|c|c|@{}}
+%\hline
+% & \multicolumn{9}{c}{Input Parameters} & \multicolumn{4}{c}{Evaluation Metrics} \\
+%  \cline{2-9}  \cline{10-14}
+% & $p_1$ & $\phi_1$ & $\chi_1$ & $p_2$ & $\phi_2$ & $\chi_2$ & $p_0$ & $\phi_{\rm c}$ & $\phi_{\rm s}$ & $\chi^2_r$ & SMSE & MSLL & RM$_{\rm wtd}$ \Tstrut\\
+% & $\%$ & rad\,m$^{-2}$ & deg & $\%$ & rad\,m$^{-2}$ & deg & $\%$ & rad\,m$^{-2}$ & rad\,m$^{-2}$ & & & & \\\hline
+%Model 1 & 100.00 & 500.10 & 40.00 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & & & &  \\
+%Model 2 & 100.00 & 49.38 & 60.00 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & & & &   \\
+%Model 3 & 100.00 & 4.96 & 60.00 &  $-$ &  $-$ &  $-$ & $-$ & $-$ & $-$  & & & &  \\
+%Model 4 & 25.00 & $-37.84$ & 0.00 & 16.70 & 103.18 & $-36.00$ & $-$ & $-$ & $-$  & & & &  \\
+%Model 5 & 25.00 & $-37.84$ & $-40.00$ & 24.00 & 5.05 & $-40.00$ & $-$ & $-$ & $-$  & & & &  \\
+%Model 6 & 25.00 & $-37.84$ & $-40.00$ & 9.00 & 5.05 & $-40.00$ & $-$ & $-$ & $-$  & & & &  \\
+%Model 7 & 25.00 & $-44.55$ & 0.00 & 16.70 & 37.50 & 72.00 & $-$ & $-$ & $-$  & & & &  \\
+%Model 8 & 25.00 & 232.56 & 40.00 & 9.00 & 192.70 & 40.00 &&&  & & & & \\
+%Model 9 & 25.00 & $-37.83$ & $-40.00$ & 16.50 & 5.05 & 140.00 & $-$ & $-$ & $-$  & & & & \\
+%Model 10 & 25.00 & $-37.84$ & 0.00 & 9.00 & 103.00 & $-36.00$ & $-$ & $-$ & $-$   & & & & \\
+%Model 11 & 25.00 & 149.50 & $40.00$ & 23.75 & 163.50 & $-68.00$ & $-$ & $-$ & $-$   & & & & \\
+%Model 12 & 25.00 & $-232.56$ & 0.00 & 9.00 & $-50.10$ & 72.00 & $-$ & $-$ & $-$  & & & &  \\
+%Model 13 & 25.00 & $-44.55$ & 0.00 & 24.00 & 37.54 & 72.00 & $-$ & $-$ & $-$   & & & & \\
+%Model 14 &  $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.90 & $-136.98$ & 50.00  & & & & \\
+%Model 15 & 1.80 & $-240.22$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 50.00  & & & & \\
+%Model 16 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.90 & $-136.98$ & 25.00  & & & & \\
+%Model 17 & 1.80 & $-240.00$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 25.00  & & & & \\\hline
+%\end{tabular}
+%\end{table*}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
