@@ -128,18 +128,18 @@ In order to exploit the use of Fast Fourier Transforms (FFTs), computational app
 {\rm RMTF}(\phi) = \frac{\int_{-\infty}^{\infty} { W(\lambda^2){\rm e}^{-2i\phi\lambda^2}~{\rm d}\lambda^2 }}{\int_{-\infty}^{\infty} { W(\lambda^2)~{\rm d}\lambda^2 }},
 \end{equation}
 %
-known as the rotation measure transfer function, RMTF$(\phi)$. Consequently, the complications caused by both the $\lambda^2 < 0$ problem and the mapping of linear frequency to wavelength-squared may be encapsulated in the weighting function $W(\lambda^2)$ and its Fourier counterpart, RMTF($\phi$). Although attempts have been made to deconvolve the RMTF from the Faraday depth spectra (e.g. \cite{2009IAUS..259..591H}) the  methods are inherently underconstrained due to the $P(\lambda^2<0) = \varnothing$ problem, resulting in a statistical ambiguity in the results.
+known as the rotation measure transfer function, RMTF$(\phi)$. Consequently, the complications caused by both the $\lambda^2 < 0$ problem and the mapping of linear frequency to wavelength-squared may be encapsulated in the weighting function $W(\lambda^2)$ and its Fourier counterpart, RMTF($\phi$). Although attempts have been made to deconvolve the RMTF from the Faraday depth spectra, e.g. \cite{2009IAUS..259..591H}, the  methods are inherently underconstrained due to the $P(\lambda^2<0) = \varnothing$ problem, resulting in a statistical ambiguity in the results.
 
-These issues are of particular importance when complex or compound Faraday structures are seen along a single line of sight. In a blind data challenge comparing different methods for extracting the parameters of Faraday structures, \cite{Sun_2015} noted that RM synthesis was highly prone to missing composite Faraday structures and that the $\sim$25\% of extragalactic sources seen observationally to have such structures (e.g. Law et al. 2011) was likely to be an underestimate. \cite{Sun_2015} concluded that when Faraday complexity is present, only QU-fitting methods will produce results that do not introduce extraneous scatter in recovered RM values. Such QU-fitting methods (e.g. \cite{Farnsworth_2011, 10.1111/j.1365-2966.2012.20554.x, 2014ApJ...792...51I} model the observed polarization, $\tilde{P}(\lambda^2)$, directly rather than decomposing Faraday depth spectra to recover parameters. However, whilst QU-fitting methods can be more reliable for recovering composite structures, in particular those including Faraday thick components, they rely on physically parametrised models of the synchrotron-emitting and Faraday rotating media along the line of sight to be known a priori. 
+These issues are of particular importance when complex or compound Faraday structures are seen along a single line of sight. In a blind data challenge comparing different methods for extracting the parameters of Faraday structures, \cite{Sun_2015} noted that RM synthesis was highly prone to missing composite Faraday structures and that the $\sim$25\% of extragalactic sources seen observationally to have such structures \citep{law2011} was likely to be an underestimate. \cite{Sun_2015} concluded that when Faraday complexity is present, only QU-fitting methods will produce results that do not introduce extraneous scatter in recovered RM values. Such QU-fitting methods, e.g. \cite{Farnsworth_2011, 10.1111/j.1365-2966.2012.20554.x, 2014ApJ...792...51I}, model the observed polarization, $\tilde{P}(\lambda^2)$, directly rather than decomposing Faraday depth spectra to recover parameters. However, whilst QU-fitting methods can be more reliable for recovering composite structures, in particular those including Faraday thick components, they rely on physically parametrised models of the synchrotron-emitting and Faraday rotating media along the line of sight to be known a priori. 
 
-In this work we explore the potential for using a Gaussian Process Modelling (GPM) approach to improve both the interpretation of Faraday depth spectra and the recovery of physical parameters from polarization measurements. In its simplest form, a GPM approach can be considered part of the family of QU-fitting methods; however, it has certain advantages over physically parameterised model-fitting methods, which include both a robustness to using non-exact models for imperfectly known datasets and an ability to provide predictive models for imputation including posterior variances.  The contents of this paper are as follows, in \S~\ref{sec:method} we describe the underlying GPM methodology including a description of the covariance kernel functions employed and the optimization of their hyper-parameters; in \S~\ref{sec:sims} we illustrate the use of the method on different Faraday structures and in \S~\ref{sec:meerkat} we demonstrate the method using a simulated polarized source population for the MeerKAT radio telescope; in \S~\ref{sec:disc} we discuss the implications of these results and draw our conclusions.
+In this work we explore the potential for using a Gaussian Process Modelling (GPM) approach to improve both the interpretation of Faraday depth spectra and the recovery of physical parameters from polarization measurements. In its simplest form, a GPM approach can be considered part of the family of QU-fitting methods; however, it has certain advantages over physically parameterised model-fitting methods, which include both a robustness to using non-exact models for imperfectly known datasets and an ability to provide predictive models for imputation including posterior variances.  The contents of this paper are as follows, in \S~\ref{sec:method} we describe the underlying GPM methodology including a description of the covariance kernel function employed and the optimization of hyper-parameters; in \S~\ref{sec:sims} we illustrate the impact of GP optimisation and re-sampling of polarization data on their resulting Faraday depth spectra in the presence of significant RFI flagging, and demonstrate how the rotation measures for Faraday thin data can be recovered from the hyper-parameters of the GP; in \S~\ref{sec:joedata} we demonstrate the method using a simulated source population with observational specifications matching that of the MeerKAT radio telescope; in \S~\ref{sec:disc} we discuss the implications of these results, compare the method to previous work in the literature and consider the use of more complex covariance kernels. In Section~\ref{sec:conclusions} we draw our conclusions.
 
 \section{Gaussian Process Modelling for Faraday Depth Reconstruction}
 \label{sec:astrogpm}
 
 Gaussian Processes (GPs) are probabilistic non-parametric models that can be used for a variety of regression and classification problems. A Gaussian Process Model (GPM) can be used to describe a given dataset by assuming a priori that the data themselves represent a realisation of a stochastic process described by a multi-variate Gaussian distribution. Such models are non-parametric as the Gaussian process (GP) is a prior on the data itself rather than on a parametric model, i.e. the complexity of the model grows with the inclusion of additional data points. GPMs are considered to be an attractive solution when modelling systems where the degree of complexity required by a parametric model is not necessarily supported by the amount of information in the observations. Overly complex parametric models are prone to over-fitting and can lead to misinterpretation of the data. In contrast, Gaussian processes are flexible probabilistic regression models that do not require exact knowledge of the underlying physical model and can also provide posterior uncertainties that naturally reflect high uncertainty in regions of data space where there are few observational constraints.
 
-In astrophysics, Gaussian processes have been used in various applications including in the study of photometric redshifts \citep{wa06300n}, variability in stellar light curves \citep{2018MNRAS.474.2094A}, eclipses in cataclysmic variable stars \citep{10.1093/mnras/stw2417}, transmission spectroscopy of extrasolar planets \citep{2012MNRAS.419.2683G}, and radio velocity studies for planetary candidates \citep{10.1093/mnras/stv1428}. It has also been used extensively in cosmic microwave background analysis \citep{1987MNRAS.226..655B, 1999CoScE...1...21B, PhysRevD.67.023001}, as well as for modelling instrumental systematics and calibration (e.g. \cite{2012MNRAS.419.2683G, 2014MNRAS.443.2517H, 2015ApJ...800...46B, Czekala_2015, 2015MNRAS.451..680E, 10.1093/mnras/stv1428, 2015Natur.526..546V, 2016MNRAS.459.2408A, 2016MNRAS.456L...6R, 2017MNRAS.466.4250L}. Here we consider the use of GPM for the reconstruction and interpretation of complex polarization data, specifically in the context of Faraday depth structure. 
+In astrophysics, Gaussian processes have been used in various applications including in the study of photometric redshifts \citep{wa06300n}, variability in stellar light curves \citep{2018MNRAS.474.2094A}, eclipses in cataclysmic variable stars \citep{10.1093/mnras/stw2417}, transmission spectroscopy of extrasolar planets \citep{2012MNRAS.419.2683G}, and radio velocity studies for planetary candidates \citep{10.1093/mnras/stv1428}. It has also been used extensively in cosmic microwave background analysis \citep{1987MNRAS.226..655B, 1999CoScE...1...21B, PhysRevD.67.023001}, as well as for modelling instrumental systematics and calibration (e.g. \cite{2012MNRAS.419.2683G, 2014MNRAS.443.2517H, 2015ApJ...800...46B, Czekala_2015, 2015MNRAS.451..680E, 10.1093/mnras/stv1428, 2015Natur.526..546V, 2016MNRAS.459.2408A, 2016MNRAS.456L...6R, 2017MNRAS.466.4250L}. 
 
 \subsection{GPM for imputation of missing polarization data}
 \label{sec:imputation}
@@ -151,9 +151,7 @@ Contingent on there being sufficient information in the remaining data, Gaussian
 \subsection{GPM for resampling of irregular data}
 \label{sec:resampling}
 
-In addition to the imputation of missing data values, GPM can also provide a method of re-sampling observational data onto a uniformly spaced $\lambda^2$-space. Since data are natively taken in channels uniformly space in frequency, practical implementations of RM Synthesis require these data to be re-sampled, or {\it gridded}, into a regularly spaced array of $\lambda^2$-positions in order to use an FFT transformation into Faraday depth space. Like RFI flagging, the non-linear relationship between frequency and wavelength-squared results in a distribution of measured data points that are often separated by large contiguous gaps in $\lambda^2$-space, resulting in high sidelobes in the RMTF. Furthermore, GPM can not only be used to re-sample data within the observed bandwidth but also to predict data beyond the boundaries of that bandwidth. Without additional data, these predictions will be subject to rapidly increasing degrees of uncertainty but may still be used over moderate distances in frequency space to improve the resolution of a measurement in Faraday depth.
-
-In practice, re-sampling to uniformly spaced $\lambda^2$-positions and imputing the values of data that are missing due to RFI flagging can be done simultaneously.
+In addition to the imputation of missing data values, GPM can also provide a method of re-sampling observational data onto a uniformly spaced $\lambda^2$-space. Since data are natively taken in channels uniformly space in frequency, practical implementations of RM Synthesis require these data to be re-sampled, or {\it gridded}, into a regularly spaced array of $\lambda^2$-positions in order to use an FFT transformation into Faraday depth space, as implemented in for example {\sc pyrmsynth}\footnote{\url{https://github.com/mrbell/pyrmsynth}} package that was used to perform RM synthesis for the LOFAR Two-metre Sky Survey \citep{lofarpyrmsynth}. Like RFI flagging, the non-linear relationship between frequency and wavelength-squared results in a distribution of measured data points that are often separated by large contiguous gaps in $\lambda^2$-space, resulting in high sidelobes in the RMTF. Furthermore, GPM can not only be used to re-sample data within the observed bandwidth but also to predict data beyond the boundaries of that bandwidth. Without additional data, these predictions will be subject to rapidly increasing degrees of uncertainty but may still be used over moderate distances in frequency space to improve the resolution of a measurement in Faraday depth. In practice, re-sampling to uniformly spaced $\lambda^2$-positions and imputing the values of data that are missing due to RFI flagging can be done simultaneously.
 
 
 \section{Method}
@@ -174,12 +172,11 @@ The expected value of the data at all other positions, $x_{\ast}$, can be calcul
 \label{eq:postcov} C_{\ast} &=&  K(x_{\ast},x_{\ast}) - K(x_{\ast},x)^T K(x,x)^{-1} K(x_{\ast},x)
 \end{eqnarray}
 %
-(see e.g. \cite{3569, article}.
+see e.g. \cite{3569, article}.
 
 For polarization data measured at regular intervals in frequency (spectral channels) and hence irregular intervals in $\lambda^2$, the posterior mean can be used to predict the values of the polarization data at regular intervals, $\lambda_{\ast}^2$, avoiding the need for explicit re-binning of the data, and the posterior variance can be used to define the weighting function $W(\lambda_{\ast}^2)$ at those positions and hence calculate the RMTF.
 
 \subsection{Kernel Definition}
-\label{sec:kernels}
 
 The covariance matrix used in Eqs.~\ref{eq:postmu}~\&~\ref{eq:postcov} can be populated analytically using a kernel function, $k$, that defines the degree of covariance for each measurement separation,
 
@@ -224,7 +221,7 @@ which can be used to produce a quasi-periodic kernel of the form,
 k_1(x_i,x_j)=h\,{\rm e}^{-c|x_i - x_j|}\left[\cos\left(\frac{2\pi|x_i - x_j|}{P}\right)\right].
 \end{equation}
 %
-We combine this quasi-periodic kernel with a white noise kernel,
+In this work we combine this quasi-periodic kernel with a white noise kernel,
 %
 \begin{equation}
 \label{eq:whitekernel}
@@ -251,7 +248,8 @@ P(\nu) = Q(\nu) + iU(\nu)
 and so the loglikelihood function can be broken down,
 %
 \begin{equation}
-\log L_{\rm P} = \log L_{\rm Q} + \log L_{\rm U}
+\label{eq:loglike}
+\log L = \log L_{\rm Q} + \log L_{\rm U}
 \end{equation}
 %
 The components of this likelihood are
@@ -268,33 +266,33 @@ where,
 \mu_{U} &=& K_{\rm U}(x_{\ast},x)^T K_{\rm U}(x,x)^{-1} U.
 \end{eqnarray}
 %
-In the case where the covariance matrix is characterised solely by stationary kernels, i.e. kernels that are functions of the sample separation, $|x_i - x_j|$, only, it can be assumed that $K_{\rm U}\equiv K_{\rm Q}$.
+In the case where the covariance matrix is characterised solely by stationary kernels, i.e. kernels that are functions of the sample separation, $|x_i - x_j|$, only, it can be assumed that $K_{\rm U}\equiv K_{\rm Q}$ and in this paper we assume a single kernel of the form given in Equation~\ref{eq:celkernel} to describe both Stokes parameters, the hyper-parameters of which are optimised using the joint likelihood in Equation~\ref{eq:loglike}.
 
-\subsection{Re-sampling Definition}
-\label{sec:resamp}
+%\subsection{Re-sampling Definition}
+%\label{sec:resamp}
 
-There are two aspects that can be addressed through resampling. The first is the regularity of measurements in $\lambda^2$-space. This regularity reduces the effect of the transfer function in Faraday depth and lowers the contamination from the RMTF side-lobes. The second effect is to increase the accessible range of $\lambda^2$-space. This can be achieved by extending the maximum and minimum limits in $\lambda^2$-space.
+%There are two aspects that can be addressed through resampling. The first is the regularity of measurements in $\lambda^2$-space. This regularity reduces the effect of the transfer function in Faraday depth and lowers the contamination from the RMTF side-lobes. The second effect is to increase the accessible range of $\lambda^2$-space. This can be achieved by extending the maximum and minimum limits in $\lambda^2$-space.
 
-To re-sample onto a regular grid in $\lambda^2$-space we need to set a step size $(\delta \lambda_{\ast}^2)$ as our regular interval. The step size that we choose will determine the maximum Faraday depth to which we have sensitivity. We can therefore chose a step size based on our desired range of Faraday depths. In practice the data will normally allow for higher maximum values than are required as astrophysical Faraday depths are typically small due to the correspondingly low electron densities and magnetic field strengths, even in the presence of very large path lengths. For Galactic fields, Faraday depths are normally limited to a range of $\pm10$\,rad\,m$^{-2}$, for external galaxies they are in the range $\sim100$\,rad\,m$^{-2}$ and for galaxy clusters typically $<1000$\,rad\,m$^{-2}$. With the exception of a few rare cases, there is no need to sample $\lambda^2$ more finely than corresponds to these values, such that,
+%To re-sample onto a regular grid in $\lambda^2$-space we need to set a step size $(\delta \lambda_{\ast}^2)$ as our regular interval. The step size that we choose will determine the maximum Faraday depth to which we have sensitivity. We can therefore chose a step size based on our desired range of Faraday depths. In practice the data will normally allow for higher maximum values than are required as astrophysical Faraday depths are typically small due to the correspondingly low electron densities and magnetic field strengths, even in the presence of very large path lengths. For Galactic fields, Faraday depths are normally limited to a range of $\pm10$\,rad\,m$^{-2}$, for external galaxies they are in the range $\sim100$\,rad\,m$^{-2}$ and for galaxy clusters typically $<1000$\,rad\,m$^{-2}$. With the exception of a few rare cases, there is no need to sample $\lambda^2$ more finely than corresponds to these values, such that,
 %
-\begin{equation}
- \delta (\lambda^2) = \frac{\sqrt{3}}{||\phi_{\rm max}||}.
-\end{equation}
+%\begin{equation}
+% \delta (\lambda^2) = \frac{\sqrt{3}}{||\phi_{\rm max}||}.
+%\end{equation}
 %
-In what follows we specify a maximum Faraday depth of 500\,rad\,m$^{-2}$.
+%In what follows we specify a maximum Faraday depth of 500\,rad\,m$^{-2}$.
 
-To extend the bandwidth $\Delta \lambda^2$, we apply the same approach and discard the five largest separations in the measured data. We then adopt the sixth largest separation as an extension in $\lambda^2$-space. This is represented graphically in Figure~\ref{fig:resampling}. The effect of this increase in available $\Delta \lambda^2$ is to improve the resolution somewhat in Faraday depth space,
+%To extend the bandwidth $\Delta \lambda^2$, we apply the same approach and discard the five largest separations in the measured data. We then adopt the sixth largest separation as an extension in $\lambda^2$-space. This is represented graphically in Figure~\ref{fig:resampling}. The effect of this increase in available $\Delta \lambda^2$ is to improve the resolution somewhat in Faraday depth space,
 %
-\begin{equation}
-\delta \phi = \frac{2\sqrt{3}}{\Delta (\lambda^2)},
-\end{equation}
+%\begin{equation}
+%\delta \phi = \frac{2\sqrt{3}}{\Delta (\lambda^2)},
+%\end{equation}
 %
-and to increase the sensitivity to extended Faraday structures,
+%and to increase the sensitivity to extended Faraday structures,
 %
-\begin{equation}
-\label{eq:fdscale}
-\Delta \phi = \frac{\pi}{\lambda_{\rm min}^2}.
-\end{equation}
+%\begin{equation}
+%\label{eq:fdscale}
+%\Delta \phi = \frac{\pi}{\lambda_{\rm min}^2}.
+%\end{equation}
 
 \begin{figure}
 \includegraphics[width=0.5\textwidth]{./FIGURES/faraday_resampling.png}
@@ -318,8 +316,6 @@ P_{\rm rg}(\lambda^2) &=&  \left(\frac{\lambda^2}{\lambda_{\rm ref}^2}\right)^{\
 &=&  \left(\frac{\lambda^2}{\lambda^2_{\rm ref}}\right)^{\alpha/2} \left[\cos (2\phi_1 \lambda^2) +  i \sin (2\phi_1 \lambda^2)\right].
 \end{eqnarray}
 
-We assume that this signal is measured over a bandwidth of ?? with channels at regularly spaced frequency intervals of width ??. We map each channel frequency to a corresponding value of $\lambda^2$. For each measurement we assume that $(Q, U, \sigma_{\rm Q}, \sigma_{\rm U})$ are recorded, where $Q$ corresponds to the real part of the polarization and $U$ corresponds to the imaginary component.
-
 \vskip .1in
 \noindent
 \textbf{Scenario Two} In this scenario we adopt the line of sight geometry of \cite{2005A&A...441.1217B}.
@@ -341,6 +337,8 @@ and the total polarization is given by
 P_{\rm tot}(\lambda^2) = P_{\rm gal}(\lambda^2) + P_{\rm rg}(\lambda^2)
 \end{equation}
 
+In both scenarios we assume that the signal is measured over a frequency bandwidth from 0.58\,GHz to 2.50\,GHz in 512 evenly spaced frequency channels. We map each channel frequency to a corresponding value of $\lambda^2$. For each measurement we assume that $(Q, U, \sigma_{\rm Q}, \sigma_{\rm U})$ are recorded, where $Q$ corresponds to the real part of the polarization and $U$ corresponds to the imaginary component.
+
 \subsection{Faraday Depth Spectra}
 \label{sec:fdspectra}
 
@@ -351,7 +349,7 @@ P_{\rm tot}(\lambda^2) = P_{\rm gal}(\lambda^2) + P_{\rm rg}(\lambda^2)
 \caption{\label{fig:scen1samp} Scenario 1: RMTF (left), Faraday depth spectrum (centre) and Faraday depth spectrum overlaid with input model (right) for the case of (i) data evenly sampled in frequency (top) and (ii) data evenly sampled in wavelength-squared (bottom). Data are noiseless in both cases.}
 \end{figure*}
 %
-We construct Faraday depth spectra for each set of complex polarization data following the numerical method outlined in \cite{2005A&A...441.1217B}. The Faraday depth spectra itself is calculated using,
+We construct Faraday depth spectra for each set of complex polarization data following the numerical method outlined in \cite{2005A&A...441.1217B}. The Faraday depth spectra are calculated using,
 %
 \begin{equation}
 F(\phi) = K^{-1}\sum_{i = 1}^{N}{W_i P_i {\rm e}^{-2j (\lambda_i^2 - \lambda_0^2) \phi}},
@@ -369,13 +367,13 @@ In each case, $K$, is the sum of the weights,
 K = \sum_{i = 1}^{N}{W_i},
 \end{equation}
 %
-where the weights are defined as the reciprocal of the variance in each channel, and $\lambda_0$ is a reference wavelength used to derotate the polarization data to a common zero-point. It is defined as
+where the weights are defined as the reciprocal of the variance in each channel, and $\lambda_0$ is a reference wavelength used to derotate the polarization data to a common zero-point defined as
 %
 \begin{equation}
-\lambda_0^2 = K^{-1}\sum_{i = 1}^{N}{W_i \lambda_i^2},
+\lambda_0^2 = K^{-1}\sum_{i = 1}^{N}{W_i \lambda_i^2}.
 \end{equation}
 
-The recovered Faraday depth spectra for Scenario~1 \& Scenario~2 are shown in Figures~\ref{fig:scen1samp}~\&~\ref{fig:scen2samp}, which illustrate the difference in the Faraday depth spectra when polarization data are sampled uniformly in frequency compared to when they are sampled uniformly in $\lambda^2$-space. 
+The recovered Faraday depth spectra for Scenario~1 \& Scenario~2 are shown in Figures~\ref{fig:scen1samp}~\&~\ref{fig:scen2samp}, which illustrate the difference in the Faraday depth spectra when polarization data are sampled uniformly in frequency compared to being sampled uniformly in $\lambda^2$-space. 
 %
 \begin{figure*}
 \centerline{\includegraphics[width=0.9\textwidth]{./FIGURES/Scenario2_fsamp.png}}
@@ -383,7 +381,7 @@ The recovered Faraday depth spectra for Scenario~1 \& Scenario~2 are shown in Fi
 \caption{\label{fig:scen2samp} Scenario 2: RMTF (left), Faraday depth spectrum (centre) and Faraday depth spectrum overlaid with input model (right) for the case of (i) data evenly sampled in frequency (top) and (ii) data evenly sampled in wavelength-squared (bottom). Data are noiseless in both cases.}
 \end{figure*}
 
-In what follows, we use inverse variance weights. For the optimised GP reconstructions, the predictive variance used for the weights is given by
+In what follows, we use inverse variance weights for calculating Faraday depth spectra. For the optimised GP reconstructions, the predictive variance used for the weights is given by
 %
 \begin{equation}
 \label{eq:gpvar}
@@ -395,37 +393,20 @@ In what follows, we use inverse variance weights. For the optimised GP reconstru
 \subsection{Parameter Estimation}
 \label{sec:optimization}
 
-To optimize the hyper-parameters we use MCMC to explore the posterior probability distribution. We use 500 samples for the burn-in then take the maximum likelihood hyper-parameter values from the burn-in and perturb them by adding noise at a level of $10^{-5}$. We then use these perturbed values to start a production run of 5000 samples.
-
-
-\subsection{Rotation Measure Extraction}
-\label{sec:rms}
-
-For Faraday thin sources the absolute value of the rotation measure can be recovered from the periodicity using,
+To optimize the hyper-parameters of our GP kernel we use MCMC implemented via the {\sc emcee} package \citep{emcee} to explore the posterior probability distribution. We use 500 samples for a burn-in then take the maximum likelihood hyper-parameter values from the burn-in and perturb them by adding noise at a level of $10^{-5}$. We then use these perturbed values to start a production run of 5000 samples. Prior ranges for each of the hyper-parameters are shown in Table~\ref{tab:priors}.
 %
-\begin{equation}
-|{\rm RM}| = \frac{\pi}{P}.
-\end{equation}
-%
-Due to the stationary nature of the covariance kernels, it is not possible to recover the sign of the rotation measure from the hyper-parameters of the covariance matrix; however, it can be recovered by comparing the correlation co-efficient, $c_{\rm corr}$, between (e.g.) the Stokes Q data and the Stokes U data shifted by $\pm\pi/2$ radians, $U^{\pm}$:
-%
-\begin{equation}
-c_{\rm corr}^{\pm} = \langle Q,U^{\pm} \rangle.
-\end{equation}
-
-We evaluate the accuracy of the RM recovery for Faraday thin sources as a function of the signal-to-noise (SNR) of the integrated polarization data, ${\rm SNR}_{\rm int}$. Following \cite{2018arXiv180604326S}, we define this value as
-%
-\begin{equation}
-{\rm SNR}_{\rm int} = \sqrt{N_{\rm chan}} \times \frac{P_0}{\sigma_{\nu}},
-\end{equation}
-%
-where $\sigma_{\nu}$ is the standard deviation of the random Gaussian noise added to each frequency channel and $N_{\rm chan}$ is the number of frequency channels. $P_0$ is the polarized amplitude at the reference frequency, taken in this case to be 1.4\,GHz. Noise is added independently to both Stokes Q and Stokes U data. It can be seen in Figure~\ref{fig:rm_snr} that for Scenario~1, the rotation measure is recovered with $< 1\,\sigma$ deviation from the true value for even low values of ${\rm SNR}_{\rm int}<10$ where the signal-to-noise on an individual frequency channel, ${\rm SNR}_{\rm chan}\ll 1$. A minimum value of ${\rm SNR}_{\rm int}=8$ is typically used to identify sources in total polarization images, see e.g. \cite{george_stil_keller_2012}, and this value is marked in Figure~\ref{fig:rm_snr}. It can be seen that the optimized RM value is in good agreement with both the expectation value and the true value of the RM above this limit. 
-
-%
-\begin{figure*}
-\centerline{\includegraphics[width=0.9\textwidth]{./FIGURES/figure4.png}}
-\caption{\label{fig:rm_snr} Recovered rotation measure (RM) as a function of the signal-to-noise (SNR) in the integrated polarization data for Scenario~1. Maximum likelihood RM estimates are shown as blue points, expectation RM estimates with a 68\% confidence interval are shown as black points. The true value of the RM is shown as a horizontal dashed line (grey) and the point at which the signal-to-noise in an individual frequency channel is equal to one is shown as a vertical dashed line (blue). The distribution of equivalent expectation values for ten different noise realisations are shown as light grey lines.}
-\end{figure*}
+\begin{table}
+\caption{\label{tab:priors} Range of uniform priors used for each of the hyper-parameters in GP kernel, see Equation~\ref{eq:celkernel}.}
+\centering
+\begin{tabular}{|c|c|}
+\hline
+Hyper-parameter & Prior \\\hline
+$\ln h$ & (-25,5)\\
+$\ln c$ & (-25,5)\\
+$\ln P$ & (-5,10)\\
+$\ln \sigma$ & (-25,5)\\\hline
+\end{tabular}
+\end{table}
 
 
 \subsection{Imputation of Missing Data}
@@ -490,6 +471,49 @@ As described in \cite{Sun_2015}, it is expected that many lines of sight will ha
 \caption{\label{fig:double} Upper: Stokes parameters for line of sight comprised of two Faraday thin sources with SNR$_{\rm chan}=20$ (black \& grey error bars), and maximum a posteriori GP model (Equation~\ref{eq:celkernel}; blue solid line) with one standard deviation posterior uncertainty (grey shaded area). Left lower: Faraday depth spectrum calculated from the noisy input data sampled at regular intervals in frequency. Right lower: Faraday depth spectrum calculated from the optimised GPM sampled at regular intervals in $\lambda^2$-space with the model components marked as solid black lines.}
 \end{figure*}
  
+ \subsection{Rotation Measure Extraction}
+\label{sec:rms}
+
+Under certain circumstances it is possible to use the optimised hyper-parameters to recover the rotation measure of a source. In principle, for Faraday thin sources the absolute value of the rotation measure can be recovered from the periodicity using,
+%
+\begin{equation}
+|{\rm RM}| = \frac{\pi}{P}.
+\end{equation}
+%
+Due to the stationary nature of the covariance kernels, it is not possible to recover the sign of the rotation measure from the hyper-parameters of the covariance matrix; however, it can be recovered by comparing the correlation co-efficient, $c_{\rm corr}$, between (e.g.) the Stokes Q data and the Stokes U data shifted by $\pm\pi/2$ radians, $U^{\pm}$:
+%
+\begin{equation}
+\label{eq:corr}
+c_{\rm corr}^{\pm} = \langle Q,U^{\pm} \rangle.
+\end{equation}
+
+Using Scenario One, we evaluate the accuracy of RM recovery for the Faraday thin source as a function of the signal-to-noise (SNR) of the integrated polarization data, ${\rm SNR}_{\rm int}$. Following \cite{2018arXiv180604326S}, we define this value as
+%
+\begin{equation}
+{\rm SNR}_{\rm int} = \sqrt{N_{\rm chan}} \times \frac{P_0}{\sigma_{\nu}},
+\end{equation}
+%
+where $\sigma_{\nu}$ is the standard deviation of the random Gaussian noise added to each frequency channel and $N_{\rm chan}$ is the number of frequency channels. $P_0$ is the polarized amplitude at the reference frequency, taken in this case to be 1.4\,GHz. Noise is added independently to both Stokes Q and Stokes U data. 
+
+It can be seen in Figure~\ref{fig:rm_snr} that for Scenario~1, the rotation measure is recovered with $< 1\,\sigma$ deviation from the true value for even low values of ${\rm SNR}_{\rm int}<10$ where the signal-to-noise on an individual frequency channel, ${\rm SNR}_{\rm chan}\ll 1$. A minimum value of ${\rm SNR}_{\rm int}=8$ is typically used to identify sources in total polarization images, see e.g. \cite{george_stil_keller_2012}, and this value is marked in Figure~\ref{fig:rm_snr}. It can be seen that the optimized RM value is in good agreement with both the expectation value and the true value of the RM above this limit. 
+
+However, we note that when using this method to obtain an RM there is a lower limit on the absolute value of the rotation measure that can be reliably recovered. This limit is dependent on the both the frequency coverage of the observational data and the signal to noise ratio. At very low values of Faraday depth the degree of rotation in the complex polarization signal becomes smaller and causes a degeneracy between hyper-parameter $c$ in Equation~\ref{eq:celkernel} and the periodicity, $P$. This is exacerbated for data at higher frequencies where the rotation is more poorly sampled. This lack of rotation also causes the method for assigning the direction of the rotation measure described in Equation~\ref{eq:corr} to be less effective, as there are not guaranteed to be $\pm\pi/2$ radians of rotation present in the observed data. As this lower limit, $\phi_{\rm lim}$, is a strong function of frequency coverage, it is possible to determine it a priori for a particular telescope such that
+%
+\begin{equation}
+\label{eq:rmlim}
+    \phi_{\rm lim} = \frac{\pi}{4\Delta \lambda^2},
+\end{equation}
+%
+where $\Delta \lambda^2$ is the coverage of the observational data in $\lambda^2$-space and the given expression corresponds to that coverage being equivalent to $\pi/2$\,radians for $\phi_{\rm lim}$.  A illustrated in Figure~\ref{fig:survey}, RM values above this limit are recovered reliably for SNR$_{\rm int}\ge 8$.
+
+We emphasise that this limit is only applicable to the calculation of the rotation measure from the hyper-parameters and does not affect the improvement in the Faraday depth spectrum from GPM re-sampling or imputation, as shown in Figures~\ref{fig:scen2samp}, where structure at low Faraday depths is recovered equivalently well.
+%
+\begin{figure*}
+\centerline{\includegraphics[width=0.9\textwidth]{./FIGURES/rm_snr.png}}
+\caption{\label{fig:rm_snr} Recovered rotation measure (RM) as a function of the signal-to-noise (SNR) in the integrated polarization data for Scenario~1. Maximum likelihood RM estimates are shown as blue points, expectation RM estimates with a 68\% confidence interval are shown as black points. The true value of the RM is shown as a horizontal dashed line (grey) and the point at which the signal-to-noise in an individual frequency channel is equal to one is shown as a vertical dashed line (blue). The distribution of equivalent expectation values for ten different noise realisations are shown as light grey lines.}
+\end{figure*}
+
+
 
 \section{Performance considerations for surveys}
 \label{sec:joedata}
@@ -547,11 +571,11 @@ where $Q$ and $U$ are the Stokes parameters for linear polarisation, $I$ is the 
 %\end{tabular}
 %\end{table}
 
-We randomly select 500 sources from this population and use an optimised GP with the kernel specified in Equation~\ref{eq:celkernel} to recover the rotation measure for each object. We use a prior range of $\mathcal{U}(-25,+5)$ for all hyper-parameters in log space.  The distribution of recovered RM values is shown in Figure~\ref{fig:survey}, where it is compared to the known input values. It can be seen that the rotation measures are recovered with consistently good accuracy. The average run time per object is 43\,seconds on a Macbook Pro with a 3.5\,GHz Intel Core i7 processor.
+We randomly select 500 sources from this population with an SNR$_{\rm int}\ge8$ and $|RM|>\phi_{\rm lim}$ and use an optimised GP with the kernel specified in Equation~\ref{eq:celkernel} to recover the rotation measure for each object. We use a prior range of $\mathcal{U}(-25,+5)$ for all hyper-parameters in log space.  The distribution of recovered RM values is shown in Figure~\ref{fig:survey}, where it is compared to the known input values. It can be seen that the rotation measures are recovered with consistently good accuracy. Errors on the recovered RMs are calculated from the 68\% confidence interval on the optimised value of $\ln P$, which results in asymmetric uncertainties on the RM values. Larger uncertainties are seen for lower SNR$_{\rm int}$ samples, as also seen in Figure~\ref{fig:rm_snr}. For 500 randomly selected samples under these constraints all of the recovered RMs lie within 5$\sigma$ of the true value and $>99\%$ within 3$\sigma$. The average run time per object is 43\,seconds on a Macbook Pro with a 3.5\,GHz Intel Core i7 processor.
 %
 \begin{figure*}
-\includegraphics[width=0.9\textwidth]{./FIGURES/figure9.png}
-\caption{\label{fig:survey} Comparison between the true input RM value and the RM value recovered by the optimised GP for each of the sources in the MeerKAT simulation. See \S~\ref{sec:joedata} for details.}
+\includegraphics[width=0.9\textwidth]{./FIGURES/rm_comp.png}
+\caption{\label{fig:survey} Comparison between the input RM value and the RM value recovered from the hyper-parameter of the optimised GP for each of the sources in the MeerKAT simulation. Left: input RM values against recovered RM values including uncertainties. Data have $8.06 \le$SNR$_{\rm int} \le 30.2$. The range of RMs excluded by the $\phi_{\rm lim}$ limit is shown as a shaded region. Right: Distribution of difference between input and recovered RM as a function of significance. See \S~\ref{sec:joedata} for details.}
 \end{figure*}
 
 %Data flagging for the MeerKAT in this band is expected to remove approximately $20-30\%$ of the bandwidth due to radio frequency interference from satellites. 
@@ -564,7 +588,7 @@ We randomly select 500 sources from this population and use an optimised GP with
 \subsection{Using GP reconstructed Faraday depth spectra}
 \label{sec:usage}
 
-Examples of Faraday depth spectra reconstructed from the optimized GP for Scenario~1 and Scenario~2 are shown in Figures~\ref{fig:flagging1}~\&~\ref{fig:flagging2}. The reconstructed Faraday depth spectra in each case (right hand column of both figures) represent the strucure in the quasi-periodic component of the covariance kernel only. Although the white noise component is taken into account during the optimization, it is not appropriate to scatter the predicted values by this distribution as the white component represents the measurement noise on the original data only. As mentioned already in \S~\ref{sec:imputation}, in order to avoid over-interpretation of the reconstructed Faraday depth spectrum, features below the equivalent detection threshold in Faraday depth space should not be considered significant.
+Examples of Faraday depth spectra reconstructed from the optimized GP for Scenario~1 and Scenario~2 are shown in Figures~\ref{fig:flagging1}~\&~\ref{fig:flagging2}. The reconstructed Faraday depth spectra in each case (right hand column of both figures) represent the structure in the quasi-periodic component of the covariance kernel only. Although the white noise component is taken into account during the optimization, it is not appropriate to scatter the predicted values by this distribution as the white component represents the measurement noise on the original data only. As mentioned already in \S~\ref{sec:imputation}, in order to avoid over-interpretation of the reconstructed Faraday depth spectrum, features below the equivalent detection threshold in Faraday depth space should not be considered significant.
 
 If the optimized GPM was used to predict the posterior mean only at the positions of the input data, the model could be subtracted from the data at those positions to estimate a residual, as shown in the lower panel of Figures~\ref{fig:scenario1}~\&~\ref{fig:scenario2}. This residual could then be transformed separately to the model and combined with the model reconstruction in a manner similar to that employed by the final step of the Cotton-Schwab CLEAN algorithm in synthesis imaging. We note that a GPM approach to two-dimensional image synthesis and deconvolution in radio astronomy is likely to be prohibitive in its computational complexity, as the fast separable kernels employed here are only appropriate for one-dimensional data.
 
@@ -581,25 +605,14 @@ It is also important to note that structures which exist only on scales larger t
 \subsubsection{Polarization leakage}
 \label{sec:leakage}
 
-In the scenarios considered here, we have assumed a zero-valued mean function. In the absence of instrumental leakage, this assumption is valid for modelling Faraday rotation; however, the presence of residual instrumental leakage can result in a non-zero offset in both Stokes~Q and Stokes~U. The inclusion of such a constant offset as a free parameter (separately for Q and U) in the optimization process is straightforward to implement and requires only very minor changes to be made in the calculation of the posterior mean. However, for some telescopes with wide bandwidths, polarization leakage can be frequency-dependent and consequently modelling it as a comstant offset will not be sufficient. In this case there is potential for confusion between the leakage term and covariate behaviour in the complex polarization; as can be seen in Figure~\ref{fig:scenario2}, smoothly varying systematic changes in amplitude can be modelled perfectly well using stationary kernels.
+In the scenarios considered here, we have assumed a zero-valued mean function. In the absence of instrumental leakage, this assumption is valid for modelling Faraday rotation; however, the presence of residual instrumental leakage can result in a non-zero offset in both Stokes~Q and Stokes~U. The inclusion of such a constant offset as a free parameter (separately for Q and U) in the optimization process is straightforward to implement and requires only very minor changes to be made in the calculation of the posterior mean. However, for some telescopes with wide bandwidths, polarization leakage can be frequency-dependent and consequently modelling it as a constant offset will not be sufficient. In this case there is potential for confusion between the leakage term and covariate behaviour in the complex polarization; as can be seen in Figure~\ref{fig:scenario2}, smoothly varying systematic changes in amplitude can be modelled perfectly well using stationary kernels.
 
 \subsection{Faraday Challenge}
 \label{sec:challenges}
 
 %\cite{Sun_2015} ran a data challenge that compared Faraday depth and QU-fitting algorithms across a set of common Faraday depth models. 
 %
-\begin{table}
-\caption{\label{tab:challengepriors} Range of uniform priors used for each of the hyper-parameters in the Faraday challenge, see \S~\ref{sec:challenges} for details.}
-\centering
-\begin{tabular}{|c|c|}
-\hline
-Hyper-parameter & Prior \\\hline
-$\ln h$ & (-10,5)\\
-$\ln c$ & (-10,5)\\
-$\ln P$ & (-10,5)\\
-$\ln \sigma$ & (-2,2)\\\hline
-\end{tabular}
-\end{table}
+
 %
 We evaluate the performance of the GP approach using the 17 models from \cite{Sun_2015}. These models include examples of single Faraday thin objects, multiple (two) Faraday thin objects, and combinations of a Faraday thick and Faraday thin objects. While the GP approach can only determine RM values in the case of single Faraday thin models, we can use the model evaluation metrics to compare the predicted Faraday depth spectra in all cases. For this purpose we use the kernel from Equation~10 for all test data sets. 
 
@@ -620,7 +633,9 @@ In addition to the median reduced chi-squared statistic, we also define the {\it
 %
 where $D$ are the input training data and all other quantities are as defined previously, and the negative log likelihood for a reference model defined as Gaussian noise with a mean and variance equivalent to those of the noisy input data. 
 
-The median of the reduced chi-squared statistic recovered from our model, $\chi^2_{\rm r} = 0.99$, is in very good agreement with the expected optimum value of $1.00\pm0.02$ from Sun et~al. (2014), which is also consistent with the value of the $MSLL= -0.90$. Results for these three figures of merit across all 17 test models, evaluated using SNR=32 as in \cite{Sun_2015}, are shown in Figure~\ref{fig:sunmetrics} for comparison to Figure~3 in that work. 
+The median of the reduced chi-squared statistic recovered from our model, $\chi^2_{\rm r} = 0.99$, is in very good agreement with the expected optimum value of $1.00\pm0.02$ from Sun et~al. (2014).
+%, which is also consistent with the value of the $MSLL= -0.90$. 
+Results for both the SMSE and $\chi_{\rm r}^2$ across all 17 test models, evaluated using SNR=32 as in \cite{Sun_2015}, are shown in Figure~\ref{fig:sunmetrics} for comparison to Figure~3 in that work. 
 %
 \begin{figure}
     \centering
@@ -640,16 +655,12 @@ The median of the reduced chi-squared statistic recovered from our model, $\chi^
 \subsection{Alternative kernels}
 \label{sec:infocrit}
 
-For a given regression problem, there are an infinite number of models that can be used. As such, it is usually not feasible to test all possible models. Although different methods of evaluating competing models have been developed, the computational complexity involved in applying them limits their applicability. To overcome this limitation, easier-to-use approximate methods are commonly used to compare the performance of two or more models. These include the Bayesian Information Criterion (BIC), the Akaike Information Criterion (AIC) and the corrected Akaike Information Criterion (AICc) \citep{doi:10.1177/0049124104268644}. These information criteria are designed to evaluate the amount of information lost by a particular model. The model that loses the least information (i.e. has the lowest valued information criterion) is considered to be the preferred model.
-
-The BIC is considered to be a powerful model selection tool when the `true' model is in the set of test models. For simulated data such as that used here, this is considered appropriate; however, in the case of true empirical data the AIC is considered to be a more appropriate criterion. Furthermore, the {\it corrected} AIC places a stronger complexity penalty on models used with finite data series than the original AIC. In the case of small sample sizes it is considered to be more appropriate and accurate for finding the preferred model. For a more detailed comparison of the different information criteria we refer the reader to Burnham \& Anderson (2002).
-
-To assess the performance of the GP model described in \S~\ref{sec:method} and denoted here as ``3-HP" we compare it to (i) the quasi-periodic kernel used by \cite{celerite} used to model stellar variability, and (ii) a hybrid kernel including a second squared-exponential term. 
+For a given regression problem, there are an infinite number of models that can be used. As such, it is usually not feasible to test all possible models. In this work so far we have used the GP kernel defined in Equation~\ref{eq:celkernel}; here we consider the use of alternative kernels. We denote our original kernel as as ``3-HP" and we compare it to (i) the quasi-periodic kernel used by \cite{celerite} to model stellar variability, and (ii) a hybrid kernel including a second squared-exponential term. 
 
 In \cite{celerite}, the period of rotation of a star was determined by extracting the optimised $P$ hyper-parameter, analogous to our use of $P$ to estimate the rotation measure of a Faraday thin source. The stellar variability kernel from \cite{celerite} is also built using the {\tt celerite} library and has the form,
 %
 \begin{equation}
-\label{eq:fmkernel}
+\label{eq:4hpkernel}
 k(x_i,x_j)=\frac{B}{1+C}\,{\rm e}^{-A|x_i - x_j|}\left[\cos\left(\frac{2\pi|x_i - x_j|}{P}\right) + (1+C)\right],
 \end{equation}
 %
@@ -658,25 +669,31 @@ where $A$, $B$, $C$ and $P$ are hyper-parameters. We denote this kernel as ``4-H
 The hybrid kernel, denoted here as ``5-HP", has the form,
 %
 \begin{equation}
-\label{eq:celkernel}
+\label{eq:5hpkernel}
 k(x_i,x_j)=h_1\,{\rm e}^{-c_1|x_i - x_j|}\cos\left(\frac{2\pi|x_i - x_j|}{P}\right) + h_2\,{\rm e}^{-c_2|x_i - x_j|},
 \end{equation}
 %
 where $h_1$, $c_1$, $P$, $h_2$ and $c_2$ are hyper-parameters. This kernel has an extra term which is intended to model smoothly varying non-periodic behaviour such as that which might arise from Faraday thick components along the line of sight.
 
-Assuming a zero-valued mean function, we optimize the hyper-parameters for each of the kernels in Equation~\ref{eq:celkernel} (3 hyper-parameters) and for the kernel in Equation~\ref{eq:fmkernel} (4 hyper-parameters). We do this for all models in the Sun et~al. (2017) sample. No noise is added to these data and so we do not include the additive white noise term with either kernel. For each sample dataset we find the maximum likelihood using the method described in \S~\ref{sec:optimization} and use this value to compute the Bayesian Information Criteria (BIC; \citep{1978AnSta...6..461S},
+Assuming a zero-valued mean function, we optimize the hyper-parameters for each of these kernels following the method described in Section~\ref{sec:optimization}. We do this for all of the test models in the \cite{Sun_2015} sample. No noise is added to the data in this case and so we do not include the additive white noise term with these kernels. 
+
+Although different methods of evaluating competing models have been developed, the computational complexity involved in applying them limits their applicability. To overcome this limitation, easier-to-use approximate methods are commonly used to compare the performance of two or more models. These include the Bayesian Information Criterion (BIC), the Akaike Information Criterion (AIC) and the corrected Akaike Information Criterion (AICc) \citep{doi:10.1177/0049124104268644}. These information criteria are designed to evaluate the amount of information lost by a particular model. The model that loses the least information (i.e. has the lowest valued information criterion) is considered to be the preferred model.
+
+The BIC is considered to be a powerful model selection tool when the `true' model is in the set of test models. For simulated data such as that used here, this is considered appropriate; however, in the case of true empirical data the AIC is considered to be a more appropriate criterion. Furthermore, the {\it corrected} AIC places a stronger complexity penalty on models used with finite data series than the original AIC. In the case of small sample sizes it is considered to be more appropriate and accurate for finding the preferred model. For a more detailed comparison of the different information criteria we refer the reader to \cite{doi:10.1177/0049124104268644}.
+
+For each sample dataset we find the maximum likelihood using the method described in \S~\ref{sec:optimization} and use this value to compute the Bayesian Information Criteria \citep[BIC;][]{1978AnSta...6..461S},
 %
 \begin{equation}
 {\rm BIC} = -2 \log L^\ast + K \log N,
 \end{equation}
 %
-the Akaike Information Criterion (AIC; Akaike 1974),
+the Akaike Information Criterion \citep[AIC;][]{AIC},
 %
 \begin{equation}
 {\rm AIC} = 2 K - 2\log L^\ast,
 \end{equation}
 %
-and the corrected AIC (AICc; Hurvich \& Tsai 1989),
+and the corrected AIC \citep[AICc;][]{AICc},
 %
 \begin{equation}
 {\rm AICc} = {\rm AIC} + \frac{2K(K+1)}{N - K - 1},
@@ -716,18 +733,16 @@ These equally high values of the median $RM_{\rm wtd}$ statistic indicate that t
 \section{Conclusions}
 \label{sec:conclusions}
 
-In this work we have demonstrated the applicability of Gaussian Process Modelling (GPM) for improved recovery of structure in Faraday depth spectra. These improvements include:
+In this work we suggest that Gaussian Process Modelling (GPM) may be a flexible alternative to traditional QU-fitting methods as it does not rely on an exact parameterised physical model, or set of models, to be known a priori and is therefore suitable for situations where some prior knowledge of the form of the signal is understood, but the exact line of sight structure is imperfectly known. This is often the case for Faraday depth analysis. With regard to this, we have shown that even simple GPM covariance kernels may be used to impute data reliably for complex lines of sight and improve the interpretability of their resulting Faraday depth spectra. 
 
-\noindent
-(i) the reduction of sidelobe contamination in Faraday depth spectra through imputation of missing data when RFI flagging causes significant losses;
+We have demonstrated the applicability of GPM for improved recovery of structure in Faraday depth spectra. We have shown that these improvements include the reduction of sidelobe contamination in Faraday depth spectra through imputation of missing data when RFI flagging causes significant losses, even in the case where significant portions of the original data set are lost. We have also illustrated the benefits of using GPM to re-sample complex polarization data onto regular spacings in $\lambda^2$-space as an alternative to currently used re-gridding methods. We have shown that these applications in combination can provide an improved representation of Faraday thick structure in Faraday depth spectra.
 
-\noindent
-(ii) the robust recovery of rotation measure values for Faraday thin sources;
+We have shown that under certain circumstances the hyper-parameters of the periodic covariance kernel can be used to recover rotation measure values for Faraday thin sources and that this hyper-parameter can also be physically meaningful in a more limited way for complex lines of sight. We have presented a method to calculate the range of RM over which this method is applicable for different telescopes and/or data sets and we have demonstrated that within this range RM recovery from GP hyper-parameters is robust to typical detection thresholds.
 
-\noindent
-(iii) and the improved representation of Faraday thick structures in Faraday depth spectra.
 
-We suggest that GPM may be a more flexible alternative to traditional QU-fitting methods as it does not rely on an exact parameterised physical model, or set of models, to be known a priori. GPM is suitable for situations where some prior knowledge of the form of the signal is understood, but the exact line of sight structure is imperfectly known. This is often the case for Faraday depth analysis.
+We have discussed the limitations in the interpretation of GPM reconstructed Faraday depth spectra, highlighted situations in which GPM is not an appropriate solution and presented a quantitative method for determining a threshold above which Faraday structure can be safely considered significant when reconstructed using an optimised GP fitted to noisy data.
+
+
 
 \section*{Acknowledgements}
 
