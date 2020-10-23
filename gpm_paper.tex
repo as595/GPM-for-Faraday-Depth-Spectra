@@ -394,7 +394,7 @@ In what follows, we use inverse variance weights for calculating Faraday depth s
 \subsection{Parameter Estimation}
 \label{sec:optimization}
 
-To optimize the hyper-parameters of our GP kernel we use MCMC implemented via the {\sc emcee} package \citep{emcee} to explore the posterior probability distribution. We use 500 samples for a burn-in then take the maximum likelihood hyper-parameter values from the burn-in and perturb them by adding noise at a level of $10^{-5}$. We then use these perturbed values to start a production run of 5000 samples. Prior ranges for each of the hyper-parameters are shown in Table~\ref{tab:priors}.
+To optimize the hyper-parameters of our GP kernel we use MCMC implemented via the {\sc emcee} package \citep{emcee} to explore the posterior probability distribution. We use 500 samples for a burn-in then take the maximum likelihood hyper-parameter values from the burn-in and perturb them by adding noise at a level of $10^{-5}$. We then use these perturbed values to start a production run of 5000 samples. Prior ranges for each of the hyper-parameters are shown in Table~\ref{tab:priors}. The lower limit on $\log P$ corresponds to a maximum Faraday depth of $\sim1200$\,rad\,m$^{-2}$.
 %
 \begin{table}
 \caption{\label{tab:priors} Range of uniform priors used for each of the hyper-parameters in GP kernel, see Equation~\ref{eq:celkernel}.}
@@ -404,7 +404,7 @@ To optimize the hyper-parameters of our GP kernel we use MCMC implemented via th
 Hyper-parameter & Prior \\\hline
 $\ln h$ & (-25,5)\\
 $\ln c$ & (-25,5)\\
-$\ln P$ & (-5,10)\\
+$\ln P$ & (-6,10)\\
 $\ln \sigma$ & (-25,5)\\\hline
 \end{tabular}
 \end{table}
@@ -548,8 +548,10 @@ where $Q$ and $U$ are the Stokes parameters for linear polarisation, $I$ is the 
 %
 \begin{equation}
 \label{eq:StilEquation}
-\log \Pi_{0,{\rm med}} = −(0.051 \pm 0.004) \log S_{\rm 1.4\,GHz} + (0.388 \pm 0.007)
+\log \Pi = -(0.051\pm0.004) \log S_{\rm 1.4\,GHz} + (0.388\pm0.007)
 \end{equation}
+%
+\citep{Stil_2014}, where $\Pi_{0, {\rm med}}$ is the median percentage polarisation fraction and $S_{\rm 1.4\,GHz}$ is the 1.4\,GHz flux density in mJy.
 %
 \citep{Stil_2014}, where $\Pi_{0, {\rm med}}$ is the median percentage polarisation fraction and $S_{\rm 1.4\,GHz}$ is the 1.4\,GHz flux density in mJy.
 
@@ -716,10 +718,10 @@ where $L^\ast$ is the maximum value of the likelihood, $K$ is the number of free
     {\it Thin}             & &   & -6913.6 & -6931.2& -6931.2\\
     {\it Double}             & &   & -3456.4 & -3473.9 & -3474.0\\
     {\it Thick}            & &   & -5526.6 & -5544.1 & -5544.2 \\
-    \textbf{5-HP}               & 300 & 5 & \textbf{-4561.6} & \textbf{-4583.6} & \textbf{-4583.7}\\
-    {\it Thin}            & &   & -6955.4 & -6977.4 & -6977.5\\
-    {\it Double}              & &   & -3460.2 & -3482.2 & -3482.3\\
-    {\it Thick}            & &   & -5519.9 & -5541.9 & -5542.0\\\hline
+    \textbf{5-HP}               & 300 & 5 & \textbf{-5086.7} & \textbf{-5108.7} & \textbf{-5108.8}\\
+    {\it Thin}            & &   & -9929.1 & -9951.0 & -9951.1\\
+    {\it Double}              & &   & -3460.5 & -3482.5 & -3482.6\\
+    {\it Thick}            & &   & -5520.3 & -5542.2 & -5542.3\\\hline
     \end{tabular}
 \end{table}
 %
