@@ -48,7 +48,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%% AUTHORS - PLACE YOUR OWN COMMANDS HERE %%%%%
-\DeclareUnicodeCharacter{2212}{-}
+%\DeclareUnicodeCharacter{2212}{-}
 
 % Please keep new commands to a minimum, and use \newcommand not \def to avoid
 % overwriting existing commands. Example:
@@ -65,16 +65,18 @@
 % The list of authors, and the short list which is used in the headers.
 % If you need two or more lines of authors, add an extra line using \newauthor
 \author[S.~W.~Ndiritu et al.]{
-S.~W.~Ndiritu,$^{1}$\thanks{E-mail: simon.ndiritu@postgrad.manchester.ac.uk
+S.~W.~Ndiritu,$^{1,2}$\thanks{E-mail: sndiritu@mpa-garching.mpg.de
  (SWN)}
-A.~M.~M.~Scaife$^{1}$,
-D.~Tabb$^{2}$,
-M.~C{\'a}rcamo$^{1,3}$ \&
-J.~Hanson$^{1}$ \\
+A.~M.~M.~Scaife$^{2,3}$,
+D.~Tabb$^{4}$,
+M.~C{\'a}rcamo$^{2,5}$ \&
+J.~Hanson$^{2}$ \\
 % List of institutions
-$^{1}$ Jodrell Bank Centre for Astrophysics, School of Physics and Astronomy, University of Manchester, Alan Turing Building,\\ Oxford Road, Manchester, M13 9PL, UK \\
+$^{1}$ Max Planck Institute for Astrophysics, Karl-Schwarzschildstra{\ss}e 1, 85748 Garching, Germany \\
 $^{2}$ Jodrell Bank Centre for Astrophysics, School of Physics and Astronomy, University of Manchester, Alan Turing Building,\\ Oxford Road, Manchester, M13 9PL, UK \\
-$^{3}$ Departamento de Ingenier\'ia Inform\'atica, Universidad de Santiago de Chile, Av. Ecuador 3659, Santiago, Chile \\
+$^{3}$ The Alan Turing Institute, Euston Road, London NW1 2DB, UK \\
+$^{4}$ Stellenbosch University, Stellenbosch Central, Stellenbosch, South Africa \\
+$^{5}$ Departamento de Ingenier\'ia Inform\'atica, Universidad de Santiago de Chile, Av. Ecuador 3659, Santiago, Chile \\
 }
 
 % These dates will be filled out by the publisher
@@ -97,7 +99,7 @@ The presence of missing data in complex polarization measurements from radio tel
 % Select between one and six entries from the list of approved keywords.
 % Don't make up new ones.
 \begin{keywords}
-keyword1 -- keyword2 -- keyword3
+techniques: polarimetric -- methods: statistical -- radio continuum: general
 \end{keywords}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -140,7 +142,7 @@ In this work we explore the potential for using a Gaussian Process Modelling (GP
 
 Gaussian Processes (GPs) are probabilistic non-parametric models that can be used for a variety of regression and classification problems. A Gaussian Process Model (GPM) can be used to describe a given dataset by assuming a priori that the data themselves represent a realisation of a stochastic process described by a multi-variate Gaussian distribution. Such models are non-parametric as the Gaussian process (GP) is a prior on the data itself rather than on a parametric model, i.e. the complexity of the model grows with the inclusion of additional data points. GPMs are considered to be an attractive solution when modelling systems where the degree of complexity required by a parametric model is not necessarily supported by the amount of information in the observations. Overly complex parametric models are prone to over-fitting and can lead to misinterpretation of the data. In contrast, Gaussian processes are flexible probabilistic regression models that do not require exact knowledge of the underlying physical model and can also provide posterior uncertainties that naturally reflect high uncertainty in regions of data space where there are few observational constraints.
 
-In astrophysics, Gaussian processes have been used in various applications including in the study of photometric redshifts \citep{wa06300n}, variability in stellar light curves \citep{2018MNRAS.474.2094A}, eclipses in cataclysmic variable stars \citep{10.1093/mnras/stw2417}, transmission spectroscopy of extrasolar planets \citep{2012MNRAS.419.2683G}, and radio velocity studies for planetary candidates \citep{10.1093/mnras/stv1428}. It has also been used extensively in cosmic microwave background analysis \citep{1987MNRAS.226..655B, 1999CoScE...1...21B, PhysRevD.67.023001}, as well as for modelling instrumental systematics and calibration (e.g. \cite{2012MNRAS.419.2683G, 2014MNRAS.443.2517H, 2015ApJ...800...46B, Czekala_2015, 2015MNRAS.451..680E, 10.1093/mnras/stv1428, 2015Natur.526..546V, 2016MNRAS.459.2408A, 2016MNRAS.456L...6R, 2017MNRAS.466.4250L}.
+In astrophysics, Gaussian processes have been used in various applications including in the study of photometric redshifts \citep{wa06300n}, variability in stellar light curves \citep{2018MNRAS.474.2094A}, Galactic dust emission \citep{ensslinfromert}, eclipses in cataclysmic variable stars \citep{10.1093/mnras/stw2417}, transmission spectroscopy of extrasolar planets \citep{2012MNRAS.419.2683G}, and radio velocity studies for planetary candidates \citep{10.1093/mnras/stv1428}. It has also been used extensively in cosmic microwave background analysis \citep{1987MNRAS.226..655B, 1999CoScE...1...21B, PhysRevD.67.023001}, as well as for modelling instrumental systematics and calibration, e.g. \cite{2012MNRAS.419.2683G, 2014MNRAS.443.2517H, 2015ApJ...800...46B, Czekala_2015, 2015MNRAS.451..680E, 10.1093/mnras/stv1428, 2015Natur.526..546V, 2016MNRAS.459.2408A, 2016MNRAS.456L...6R, 2017MNRAS.466.4250L}.
 
 \subsection{GPM for imputation of missing polarization data}
 \label{sec:imputation}
@@ -617,28 +619,28 @@ In the scenarios considered here, we have assumed a zero-valued mean function. I
 %
 
 %
-We evaluate the performance of the GP approach using the 17 models from \cite{Sun_2015}. These models include examples of single Faraday thin objects, multiple (two) Faraday thin objects, and combinations of a Faraday thick and Faraday thin objects. While the GP approach can only determine RM values in the case of single Faraday thin models, we can use the model evaluation metrics to compare the predicted Faraday depth spectra in all cases. For this purpose we use the kernel from Equation~10 for all test data sets.
+In order to evaluate the performance of the GP approach against other methods in the literature we use the 17 models from the Faraday challenge of \cite{Sun_2015}. These models include examples of single Faraday thin objects, multiple (two) Faraday thin objects, and combinations of  Faraday thick and Faraday thin objects. While the GP approach can only determine RM values in the case of single Faraday thin models, we can use the model evaluation metrics to compare the predicted Faraday depth spectra in all cases. For this purpose we use the kernel from Equation~10 for all test data sets with priors as listed in Table~\ref{tab:priors}. All evaluations are made on models with SNR$_{\rm int}$=32, as in \cite{Sun_2015}.
 
 %The parameters for each model are listed in Table~\ref{tab:challenge} and we use the same method as described in \S~\ref{sec: } with hyper-parameter priors as given in Table~\ref{tab:challengepriors}.
 The reduced $\chi^2$ for parametric models described in \cite{Sun_2015} is roughly equivalent to the standardized mean squared error (SMSE). For an optimised GP, the SMSE is defined as
 %
 \begin{equation}
-SMSE = \frac{1}{2N}\left[ \frac{(P_{\ast} - P(\lambda^2_{\ast}))^2}{\sigma_{\rm n}^2}  \right],
+SMSE = \frac{1}{N}\left[ \frac{(P - P_{\ast})^2}{\sigma_{\rm n}^2}  \right],
 \end{equation}
 %
-where $P_{\ast}$ is the posterior mean prediction of complex polarization from the optimized GP, $P(\lambda^2_{\ast})$ is the input complex polarization, and $\sigma_{\rm n}^2$ is the variance of the white noise on the input data. There is a factor of two in the denominator of the normalisation in order to account for the independence of the white noise between Stokes~Q and U. The difference between this quantity and the $\chi^2_{\rm r}$ used by \cite{Sun_2015} is the normalisation, which uses $2N-K$ in the demoninator where $K$ is the number of parameters. Although the GP used here is not strictly parametric, we calculate this quantity using $K=4$ to represent the number of hyper-parameters in our model.
+where $P_{\ast}$ is the posterior mean prediction of complex polarization from the optimized GP, $P$ is the input complex polarization, and $\sigma_{\rm n}^2$ is the variance of the white noise on the input data. In order to account for the independence of the white noise between Stokes~Q and U we set $N=600$. The difference between the SMSE and the $\chi^2_{\rm r}$ used by \cite{Sun_2015} is the normalisation, which instead uses $N-K$ in the denominator where $K$ is the number of parameters. Although the GP used here is not strictly parametric, we calculate this quantity using $K=4$ to represent the number of hyper-parameters in our model.
 
-In addition to the median reduced chi-squared statistic, we also define the {\it mean standardised log loss} (MSLL) as a measure of the prediction quality. As described by \cite{3569}, this quantity is the difference between the negative log likelihood for the optimized GP, given by,
+Since the GP optimisation method produces a full predictive distribution at the position of each test sample, we also calculate the mean standardised log likelihood as a measure of performance \citep{3569}. The negative log-likelihood for the GP is given by,
 %
 \begin{equation}
--\log p(P_{\ast} | D, \lambda^2_{\ast}) = \frac{1}{2}\log(2\pi \sigma_{\ast}) + \frac{(P_{\ast} - P(\lambda^2_{\ast}))^2}{2\sigma_{\ast}^2},
+\label{eq:logl}
+-\log L^{\ast} = \frac{1}{2}\log(2\pi \sigma_{\ast}) + \frac{(P - P_{\ast})^2}{2\sigma_{\ast}^2},
 \end{equation}
 %
-where $D$ are the input training data and all other quantities are as defined previously, and the negative log likelihood for a reference model defined as Gaussian noise with a mean and variance equivalent to those of the noisy input data.
+where $D$ are the input training data, $P$ are the input polarization data, $P_{\ast}$ are the GP reconstructed polarization data, and $\sigma_{\ast}^2$ is the variance of the GP reconstruction, defined in Equation~\ref{eq:gpvar}.
+We standardise this loss by subtracting the equivalent loss as calculated using a model that predicts using a simple Gaussian with the mean and variance of the input data. The individual performance metrics for each model in the Faraday challenge are listed in Appendix~\ref{app:challenge}.
 
-The median of the reduced chi-squared statistic recovered from our model, $\chi^2_{\rm r} = 0.99$, is in very good agreement with the expected optimum value of $1.00\pm0.02$ from Sun et~al. (2014).
-%, which is also consistent with the value of the $MSLL= -0.90$.
-Results for both the SMSE and $\chi_{\rm r}^2$ across all 17 test models, evaluated using SNR=32 as in \cite{Sun_2015}, are shown in Figure~\ref{fig:sunmetrics} for comparison to Figure~3 in that work.
+The median of the reduced chi-squared statistic recovered from our model, $\chi^2_{\rm r} = 0.99$, is in good agreement with the expected optimum value of $1.00\pm0.02$ from Sun et~al. (2014). Results for both the SMSE and $\chi_{\rm r}^2$ across all 17 test models, evaluated using SNR=32 as in \cite{Sun_2015}, are shown in Figure~\ref{fig:sunmetrics}. By comparison to Figure~3 in that work it can be seen that the GP $\chi_{\rm r}^2$ has a median value comparable to that of the three best performing methods in that work, each of which use QU-fitting approaches. Furthermore, it can also be seen that the distribution of $\chi_{\rm r}^2$ for the GP method is significantly narrower than those methods, each of which has a 68\% confidence interval that extends to values larger than $\chi_{\rm r}^2=1.1$.
 %
 \begin{figure}
     \centering
@@ -676,15 +678,13 @@ The hybrid kernel, denoted here as ``5-HP", has the form,
 k(x_i,x_j)=h_1\,{\rm e}^{-c_1|x_i - x_j|}\cos\left(\frac{2\pi|x_i - x_j|}{P}\right) + h_2\,{\rm e}^{-c_2|x_i - x_j|},
 \end{equation}
 %
-where $h_1$, $c_1$, $P$, $h_2$ and $c_2$ are hyper-parameters. This kernel has an extra term which is intended to model smoothly varying non-periodic behaviour such as that which might arise from Faraday thick components along the line of sight.
+where $h_1$, $c_1$, $P$, $h_2$ and $c_2$ are hyper-parameters. Both the 4-HP and 5-HP kernels have an extra term which is intended to model smoothly varying non-periodic behaviour such as that which might arise from Faraday thick components along the line of sight.
 
-Assuming a zero-valued mean function, we optimize the hyper-parameters for each of these kernels following the method described in Section~\ref{sec:optimization}. We do this for all of the test models in the \cite{Sun_2015} sample. No noise is added to the data in this case and so we do not include the additive white noise term with these kernels.
+Although different methods of evaluating competing models have been developed, the computational complexity involved in applying them limits their applicability. To overcome this limitation, easier-to-use approximate methods are commonly used to compare the performance of two or more models. These include the Bayesian Information Criterion (BIC), the Akaike Information Criterion (AIC) and the corrected Akaike Information Criterion (AICc). These information criteria are designed to evaluate the amount of information lost by a particular model. The model that loses the least information, i.e. has the lowest valued information criterion, is considered to be the preferred model.
 
-Although different methods of evaluating competing models have been developed, the computational complexity involved in applying them limits their applicability. To overcome this limitation, easier-to-use approximate methods are commonly used to compare the performance of two or more models. These include the Bayesian Information Criterion (BIC), the Akaike Information Criterion (AIC) and the corrected Akaike Information Criterion (AICc) \citep{doi:10.1177/0049124104268644}. These information criteria are designed to evaluate the amount of information lost by a particular model. The model that loses the least information (i.e. has the lowest valued information criterion) is considered to be the preferred model.
+\cite{burnham} suggest that the  BIC is  a powerful model selection tool when the `true' model is in the set of test models; however, in the case of empirical data where the true model is unlikely to be known a priori the AIC is considered to be a more appropriate criterion. Furthermore, the \emph{corrected} AIC places a stronger complexity penalty on models used with finite data series than the original AIC. In the case of small sample sizes it is considered to be more appropriate and accurate for finding the preferred model. However, \cite{kassrafferty} suggest that the AIC should only be used in situations where the prior distribution is similar to that of the likelihood and that when this isn't the case and the prior is significantly less informative than the likelihood then the BIC will favour simpler models than the AIC. 
 
-The BIC is considered to be a powerful model selection tool when the `true' model is in the set of test models. For simulated data such as that used here, this is considered appropriate; however, in the case of true empirical data the AIC is considered to be a more appropriate criterion. Furthermore, the {\it corrected} AIC places a stronger complexity penalty on models used with finite data series than the original AIC. In the case of small sample sizes it is considered to be more appropriate and accurate for finding the preferred model. For a more detailed comparison of the different information criteria we refer the reader to \cite{doi:10.1177/0049124104268644}.
-
-For each sample dataset we find the maximum likelihood using the method described in \S~\ref{sec:optimization} and use this value to compute the Bayesian Information Criteria \citep[BIC;][]{1978AnSta...6..461S},
+For each sample dataset we optimize the hyper-parameters for each of the three kernels using the method described in \S~\ref{sec:optimization} and use these values to compute the Bayesian Information Criteria \citep[BIC;][]{1978AnSta...6..461S},
 %
 \begin{equation}
 {\rm BIC} = -2 \log L^\ast + K \log N,
@@ -702,36 +702,22 @@ and the corrected AIC \citep[AICc;][]{AICc},
 {\rm AICc} = {\rm AIC} + \frac{2K(K+1)}{N - K - 1},
 \end{equation}
 %
-where $L^\ast$ is the maximum value of the likelihood, $K$ is the number of free parameters, and $N$ is the number of data points. The results of these tests, averaged over different models are shown in Table~\ref{tab:infocriteria} where it can be seen that the 5-HP kernel is strongly preferred for thin sources, but that the 3-HP and 4-HP kernels are preferred for the double and thick Faraday spectra. This suggests that different kernels may be used to optimise recovery of specific Faraday structures.
+where $\log L^\ast$ is given by Equation~\ref{eq:logl}, $K$ is the number of hyper-parameters, and $N=600$ is the number of data points.
+
+We calculate the median value and inter-quartile range for each of the three information criteria from ten different noise realisations with SNR$_{\rm int}$=32. 
+%Examples of these values are shown in Table~\ref{tab:icthin} for the models with only one Faraday thin component, and are continued in Appendix~\ref{app:ic} for the other fourteen models. 
 %
-\begin{table}
-\caption{Kernel comparison for the 16 Faraday challenge models.\label{tab:infocriteria}}
+The goodness of fit statistics for the Faraday challenge models using the two alternative kernels are $\chi^2_{\rm r} = 0.98$ for the 4-HP model, and $\chi^2_{\rm r} = 0.97$ for the 5-HP model.
+
+The median values of the information criteria suggest a preference for the HP-4 kernel in the case of single Faraday thin component models, a preference for the HP-5 kernel in the case of double Faraday thin models, and a preference for the HP-3 kernel in the case of Faraday thick models. However, we note that these are modal preferences and no model type shows a unanimous preference for a particular kernel. Indeed, although ranking the three kernels using the median value of the information criteria for each data set may nominally show a preference for one kernel above others, the overlapping inter-quartile ranges for most models suggest that there is in fact no clear preference. The only model where one kernel is significantly preferred is Model 1, where the inter-quartile range of the HP-4 kernel is outside the inter-quartile range of both other kernels, see Figure~\ref{fig:model1bic}. We also see no difference in the median ranking across the three information criteria, which is perhaps unsurprising given that $N \gg K$ in all cases. Furthermore, as noted by \cite{biccomp}, information criteria comparisons are appropriate only for data sets with the same number of measurement samples, and we emphasise that the kernel comparison presented here is for the specifications of the test sets in the \cite{Sun_2015} Faraday challenge. 
+%
+\begin{figure}
     \centering
-    \begin{tabular}{l|cc|ccc}
-    \hline
-    Model & N & K & BIC & AIC & AICc \\\hline
-    \textbf{3-HP}               & 300 & 3 & \textbf{-4548.4} & \textbf{-4561.6} & \textbf{-4561.6} \\
-    {\it Thin}               & &   & -6920.5 & -6933.6 & -6933.7\\
-    {\it Double}               & &   & -3444.4 & -3457.6 & -3457.6\\
-    {\it Thick}               & &   & -5529.1 & -5542.3 & -5542.3 \\
-    \textbf{4-HP}               & 300 & 4 & \textbf{-4553.7} & \textbf{-4571.3} & \textbf{-4571.4}\\
-    {\it Thin}             & &   & -6913.6 & -6931.2& -6931.2\\
-    {\it Double}             & &   & -3456.4 & -3473.9 & -3474.0\\
-    {\it Thick}            & &   & -5526.6 & -5544.1 & -5544.2 \\
-    \textbf{5-HP}               & 300 & 5 & \textbf{-5086.7} & \textbf{-5108.7} & \textbf{-5108.8}\\
-    {\it Thin}            & &   & -9929.1 & -9951.0 & -9951.1\\
-    {\it Double}              & &   & -3460.5 & -3482.5 & -3482.6\\
-    {\it Thick}            & &   & -5520.3 & -5542.2 & -5542.3\\\hline
-    \end{tabular}
-\end{table}
-%
-%
-%\centerline{\includegraphics[width=0.33\textwidth]{./FIGURES/3hp_bp.png}\qquad\includegraphics[width=0.33\textwidth]{./FIGURES/4hp_bp.png}\qquad\includegraphics[width=0.33\textwidth]{./FIGURES/5hp_bp.png}}
-%\caption{\label{fig:boxplot}}
-%\end{figure*}
-%
-Using the same noise parameters as in \S~\ref{sec:challenges}, the goodness of fit statistics for the 16 models using the two alternative kernels are $\chi^2_{\rm r} = 1.01$, $MSLL=-0.94$ and $RM_{\rm wtd}=3.62$, for the 4-HP model, and $\chi^2_{\rm r} = 0.97$, $MSLL=-0.81$ and $RM_{\rm wtd}=4.98$, for the 5-HP model.
-These equally high values of the median $RM_{\rm wtd}$ statistic indicate that the 4-HP and 5-HP kernels are also over-fitting the data to some extent. Repeated fits to the Faraday challenge models with different noise realisations show that the 5-HP kernel has a consistently higher $RM_{\rm wtd}$ value than the 4-HP and 3-HP kernels, suggesting that its additional flexibility is a disadvantage in the presence of noise.
+    \includegraphics[width=0.45\textwidth]{./FIGURES/model0_info.png}
+    \caption{Box-and-whisker plots for BIC values derived from each of the 3 kernels using 10 noise realisations of Model 1 from \cite{Sun_2015}. The boxes show the first, the second (median), and the third quartile, and the ends of the whiskers show the minimum and maximum values.\label{fig:model1bic}}
+\end{figure}
+
+
 
 \section{Conclusions}
 \label{sec:conclusions}
@@ -745,11 +731,12 @@ We have shown that under certain circumstances the hyper-parameters of the perio
 
 We have discussed the limitations in the interpretation of GPM reconstructed Faraday depth spectra, highlighted situations in which GPM is not an appropriate solution and presented a quantitative method for determining a threshold above which Faraday structure can be safely considered significant when reconstructed using an optimised GP fitted to noisy data.
 
+We have evaluated the GP reconstruction proposed here against other methods in the literature and have shown that it has a performance equivalent to other QU-fitting methods and furthermore that the variance in results from the GP approach is smaller than seen from those methods. Using the same test data we have quantitatively confirmed our assertion that even complex Faraday structure can be re-constructed equivalently well using a comparatively simple covariance kernel.
 
 
 \section*{Acknowledgements}
 
-SWN acknowledges support from the UK Newton Fund via the Science \& Technology Facilities Council (STFC) through the Development in Africa with Radio Astronomy (DARA) Big Data project. JH acknowledges support from the UK Science \& Technology Facilities Council (STFC). MC acknowledges support from CONICYT PFCHA/DOCTORADO BECAS CHILE/2018-72190574.
+SWN acknowledges support from the UK Newton Fund via the Science \& Technology Facilities Council (STFC) through the Development in Africa with Radio Astronomy (DARA) Big Data project. AMS gratefully acknowledges support from an Alan Turing Institute AI fellowship. JH acknowledges support from the UK Science \& Technology Facilities Council (STFC). MC acknowledges support from CONICYT PFCHA/DOCTORADO BECAS CHILE/2018-72190574.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -774,40 +761,148 @@ SWN acknowledges support from the UK Newton Fund via the Science \& Technology F
 
 %%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%%%%
 
-%\appendix
+\appendix
 
-%\section{Faraday challenge models}
+\section{Faraday Challenge Models}
+\label{app:challenge}
+%
+\newcommand\Tstrut{\rule{0pt}{2.6ex}}       % top strut
+\newcommand\Bstrut{\rule[-1.1ex]{0pt}{0pt}} % bottom strut
+%
+ \begin{table*}
+\caption{\label{tab:challenge}}
+\begin{tabular}{@{\extracolsep{4pt}}|l|c|c|c|c|c|c|c|c|c|c|c|c|@{}}
+\hline
+ & \multicolumn{9}{c}{Input Parameters} &  \multicolumn{3}{c}{Evaluation Metrics} \\
+  \cline{2-10}  \cline{11-13} \Tstrut
+ & $p_1$ & $\phi_1$ & $\chi_1$ & $p_2$ & $\phi_2$ & $\chi_2$ & $p_0$ & $\phi_{\rm c}$ & $\phi_{\rm s}$ & $\chi^2_r$ & SMSE & MSLL  \\
+ & $\%$ & rad\,m$^{-2}$ & deg & $\%$ & rad\,m$^{-2}$ & deg & $\%$ & rad\,m$^{-2}$ & rad\,m$^{-2}$ & & &  \\\hline
+Model 1 & 100.00 & 500.10 & 40.00 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.01 & 1.00 & -1.37  \\
+Model 2 & 100.00 & 49.38 & 60.00 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 0.92 & 0.91 & -0.95   \\
+Model 3 & 100.00 & 4.96 & 60.00 &  $-$ &  $-$ &  $-$ & $-$ & $-$ & $-$   & 1.00 & 1.00 & -0.47  \\
+Model 4 & 25.00 & $-37.84$ & 0.00 & 16.70 & 103.18 & $-36.00$ & $-$ & $-$ & $-$  & 0.95 & 0.95 & -1.00  \\
+Model 5 & 25.00 & $-37.84$ & $-40.00$ & 24.00 & 5.05 & $-40.00$ & $-$ & $-$ & $-$  & 0.98 & 0.97 & -0.57   \\
+Model 6 & 25.00 & $-37.84$ & $-40.00$ & 9.00 & 5.05 & $-40.00$ & $-$ & $-$ & $-$  & 1.04 &  1.03 & -0.92   \\
+Model 7 & 25.00 & $-44.55$ & 0.00 & 16.70 & 37.50 & 72.00 & $-$ & $-$ & $-$  & 0.90 & 0.89 & -0.58   \\
+Model 8 & 25.00 & 232.56 & 40.00 & 9.00 & 192.70 & 40.00 &&&  & 0.94 & 0.93 & -1.31 \\
+Model 9 & 25.00 & $-37.83$ & $-40.00$ & 16.50 & 5.05 & 140.00 & $-$ & $-$ & $-$  & 0.97 & 0.96 & -0.71  \\
+Model 10 & 25.00 & $-37.84$ & 0.00 & 9.00 & 103.00 & $-36.00$ & $-$ & $-$ & $-$   & 1.00 &  0.99 & -1.02  \\
+Model 11 & 25.00 & 149.50 & $40.00$ & 23.75 & 163.50 & $-68.00$ & $-$ & $-$ & $-$   & 0.87 & 0.87 & -1.34 \\
+Model 12 & 25.00 & $-232.56$ & 0.00 & 9.00 & $-50.10$ & 72.00 & $-$ & $-$ & $-$  & 0.99 & 0.98 & -1.31 \\
+Model 13 & 25.00 & $-44.55$ & 0.00 & 24.00 & 37.54 & 72.00 & $-$ & $-$ & $-$   & 0.98 & 0.97 & -0.61 \\
+Model 14 &  $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.90 & $-136.98$ & 50.00  & 0.82 & 0.82 & -1.44  \\
+Model 15 & 1.80 & $-240.22$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 50.00  & 1.09 & 1.09 & -1.38 \\
+Model 16 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.90 & $-136.98$ & 25.00  & 0.86 & 0.86 & -1.45 \\
+Model 17 & 1.80 & $-240.00$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 25.00  & 0.93 & 0.92 & -1.31  \\\hline
+\end{tabular}
+\end{table*}
 
-%\newcommand\Tstrut{\rule{0pt}{2.6ex}}       % top strut
-%\newcommand\Bstrut{\rule[-1.1ex]{0pt}{0pt}} % bottom strut
+\section{Information Criteria}
+\label{app:ic}
 
-%\begin{table*}
-%\caption{\label{tab:challenge}}
-%\begin{tabular}{@{\extracolsep{4pt}}|l|c|c|c|c|c|c|c|c|c|c|c|c|c|@{}}
-%\hline
-% & \multicolumn{9}{c}{Input Parameters} & \multicolumn{4}{c}{Evaluation Metrics} \\
-%  \cline{2-9}  \cline{10-14}
-% & $p_1$ & $\phi_1$ & $\chi_1$ & $p_2$ & $\phi_2$ & $\chi_2$ & $p_0$ & $\phi_{\rm c}$ & $\phi_{\rm s}$ & $\chi^2_r$ & SMSE & MSLL & RM$_{\rm wtd}$ \Tstrut\\
-% & $\%$ & rad\,m$^{-2}$ & deg & $\%$ & rad\,m$^{-2}$ & deg & $\%$ & rad\,m$^{-2}$ & rad\,m$^{-2}$ & & & & \\\hline
-%Model 1 & 100.00 & 500.10 & 40.00 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & & & &  \\
-%Model 2 & 100.00 & 49.38 & 60.00 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & & & &   \\
-%Model 3 & 100.00 & 4.96 & 60.00 &  $-$ &  $-$ &  $-$ & $-$ & $-$ & $-$  & & & &  \\
-%Model 4 & 25.00 & $-37.84$ & 0.00 & 16.70 & 103.18 & $-36.00$ & $-$ & $-$ & $-$  & & & &  \\
-%Model 5 & 25.00 & $-37.84$ & $-40.00$ & 24.00 & 5.05 & $-40.00$ & $-$ & $-$ & $-$  & & & &  \\
-%Model 6 & 25.00 & $-37.84$ & $-40.00$ & 9.00 & 5.05 & $-40.00$ & $-$ & $-$ & $-$  & & & &  \\
-%Model 7 & 25.00 & $-44.55$ & 0.00 & 16.70 & 37.50 & 72.00 & $-$ & $-$ & $-$  & & & &  \\
-%Model 8 & 25.00 & 232.56 & 40.00 & 9.00 & 192.70 & 40.00 &&&  & & & & \\
-%Model 9 & 25.00 & $-37.83$ & $-40.00$ & 16.50 & 5.05 & 140.00 & $-$ & $-$ & $-$  & & & & \\
-%Model 10 & 25.00 & $-37.84$ & 0.00 & 9.00 & 103.00 & $-36.00$ & $-$ & $-$ & $-$   & & & & \\
-%Model 11 & 25.00 & 149.50 & $40.00$ & 23.75 & 163.50 & $-68.00$ & $-$ & $-$ & $-$   & & & & \\
-%Model 12 & 25.00 & $-232.56$ & 0.00 & 9.00 & $-50.10$ & 72.00 & $-$ & $-$ & $-$  & & & &  \\
-%Model 13 & 25.00 & $-44.55$ & 0.00 & 24.00 & 37.54 & 72.00 & $-$ & $-$ & $-$   & & & & \\
-%Model 14 &  $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.90 & $-136.98$ & 50.00  & & & & \\
-%Model 15 & 1.80 & $-240.22$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 50.00  & & & & \\
-%Model 16 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.90 & $-136.98$ & 25.00  & & & & \\
-%Model 17 & 1.80 & $-240.00$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 25.00  & & & & \\\hline
-%\end{tabular}
-%\end{table*}
+\begin{table*}
+\caption{Information criteria comparison for the \cite{Sun_2015} single component Faraday thin challenge models. \label{tab:icthin}}
+    \centering
+    \begin{tabular}{@{\extracolsep{3pt}}lccccccccc@{}}
+    \hline
+     & \multicolumn{3}{c}{\textbf{BIC}} & \multicolumn{3}{c}{\textbf{AIC}} & \multicolumn{3}{c}{\textbf{AICc}} \\
+     \cline{2-4} \cline{5-7} \cline{8-10} \\
+     & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 \\\hline
+    \textbf{Model 1} & & & & & & & & & \\
+    \emph{Median} & 3755.15 & 3640.21 & 3844.46 & 3737.56 & 3618.23 & 3818.08 & 3737.50 & 3618.12 & 3817.94 \\
+    \emph{IQR} & 100.50 & 60.49 & 141.18 & 100.50 & 60.49 & 141.18 & 100.50 & 60.49 & 141.18 \\
+    \emph{Median Rank} & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 \\\hline
+    \textbf{Model 2} & & & & & & & & & \\
+    \emph{Median} & 3470.12 & 3402.59 & 3586.46 & 3452.53 & 3380.61 & 3560.08 & 3452.46 & 3380.51 & 3559.93 \\
+    \emph{IQR} & 176.85 & 140.70 & 201.36 & 176.85 & 140.70 & 201.36 & 176.85 & 140.70 & 201.36 \\
+    \emph{Median Rank} & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 \\\hline
+    \textbf{Model 3} & & & & & & & & & \\
+    \emph{Median} & 1747.28 & 1773.87 & 1784.08 &1729.69 & 1751.88 & 1757.70 & 1729.62 & 1751.78 & 1757.56 \\
+    \emph{IQR} & 24.82 & 25.29 & 40.32 & 24.82 & 25.29 & 40.32 & 24.82 & 25.29 & 40.32 \\
+    \emph{Median Rank} & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 \\\hline
+    \end{tabular}
+\end{table*}
+
+\begin{table*}
+\caption{Information criteria comparison for the \cite{Sun_2015} two component Faraday thin challenge models. \label{tab:icdouble}}
+    \centering
+    \begin{tabular}{@{\extracolsep{3pt}}lccccccccc@{}}
+    \hline
+     & \multicolumn{3}{c}{\textbf{BIC}} & \multicolumn{3}{c}{\textbf{AIC}} & \multicolumn{3}{c}{\textbf{AICc}} \\
+     \cline{2-4} \cline{5-7} \cline{8-10} \\
+     & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 \\\hline
+    \textbf{Model 4} & & & & & & & & & \\
+    \emph{Median} & 4277.15 & 4271.52 & 4240.80 & 4259.56 & 4249.53 & 4214.42 & 4259.49 & 4249.43 & 4214.28 \\
+    \emph{IQR} & 159.35 & 129.16 & 310.82 & 159.35 & 129.16 & 310.82 & 1159.35 & 129.16 & 310.82 \\
+    \emph{Median Rank} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} \\\hline
+    \textbf{Model 5} & & & & & & & & & \\
+    \emph{Median} & 2243.48 & 2227.26 & 2177.76 & 2225.89 & 2205.27 & 2151.37 & 2225.82 & 2205.17 & 2151.23 \\
+    \emph{IQR} & 78.90 & 47.88 & 183.96 & 78.90 & 47.88 & 183.96 & 78.90 & 47.88 & 183.96 \\
+    \emph{Median Rank} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} \\\hline
+    \textbf{Model 6} & & & & & & & & & \\
+    \emph{Median} & 2607.97 & 2647.48 & 2609.77 & 2590.38 & 2625.50 & 2583.39 & 2590.31 & 2625.40 & 2583.25 \\
+    \emph{IQR} & 119.54 & 242.46 & 124.85 & 119.54 & 242.46 & 124.85 & 119.54 & 242.46 & 124.85 \\
+    \emph{Median Rank} & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 \\\hline
+    \textbf{Model 7} & & & & & & & & & \\
+    \emph{Median} & 1938.54 & 1910.52 & 1983.06 & 1920.95 & 1888.53 & 1956.68 & 1920.88 & 1888.43 & 1956.53 \\
+    \emph{IQR} & 45.77 & 113.92 & 50.01 & 45.77 & 113.92 & 50.01 & 45.77 & 113.92 & 50.01 \\
+    \emph{Median Rank} & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 \\\hline
+    \textbf{Model 8} & & & & & & & & & \\
+    \emph{Median} & 3752.25 & 3784.76 & 3820.70 & 3734.66 & 3762.77 & 3794.32 & 3734.59 & 3762.67 & 3794.17 \\
+    \emph{IQR} & 201.42 & 259.46 & 168.60 & 201.42 & 259.46 & 168.60 & 201.42 & 259.46 & 168.60 \\
+    \emph{Median Rank} & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 \\\hline
+    \textbf{Model 9} & & & & & & & & & \\
+    \emph{Median} & 2480.21 & 2458.57 & 2437.71 & 2462.62 & 2436.58 & 2411.33 & 2462.55 & 2436.48 & 2411.19 \\
+    \emph{IQR} & 153.57 & 154.53 & 135.08 & 153.57 & 154.53 & 135.08 & 153.57 & 154.53 & 135.08 \\
+    \emph{Median Rank} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} \\\hline
+    \textbf{Model 10} & & & & & & & & & \\
+    \emph{Median} & 3715.45 & 3730.73 & 3645.83 & 3697.86 & 3708.75 & 3619.45 & 3697.80 & 3708.64 & 3619.31 \\
+    \emph{IQR} & 347.43 & 262.59 & 221.87 & 347.43 & 262.59 & 221.87 & 347.43 & 262.59 & 221.87 \\
+    \emph{Median Rank} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} \\\hline
+    \textbf{Model 11} & & & & & & & & & \\
+    \emph{Median} & 3644.72 & 3778.41 & 3572.76 & 3627.13 & 3756.42 & 3546.38 & 3627.06 & 3756.32 & 3546.24 \\
+    \emph{IQR} & 185.38 & 122.68 & 127.99 & 185.38 & 122.68 & 127.99 & 185.38 & 122.68 & 127.99 \\
+    \emph{Median Rank} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} \\\hline
+    \textbf{Model 12} & & & & & & & & & \\
+    \emph{Median} & 3645.33 & 3655.36 & 3489.09 & 3627.74 & 3633.38 & 3462.71 & 3627.67 & 3633.28 & 3462.57 \\
+    \emph{IQR} & 241.72 & 315.95 & 78.99 & 241.72 & 315.95 & 78.99 & 241.72 & 315.95 & 78.99 \\
+    \emph{Median Rank} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} \\\hline
+    \textbf{Model 13} & & & & & & & & & \\
+    \emph{Median} & 1843.74 & 1829.21 & 1848.77 & 1826.15 & 1807.22 & 1822.39 & 1826.08 & 1807.12 & 1822.25 \\
+    \emph{IQR} & 48.46 & 31.59 & 85.03 & 48.46 & 31.59 & 85.03 & 48.46 & 31.59 & 85.03 \\
+    \emph{Median Rank} & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 \\\hline
+    \end{tabular}
+\end{table*}
+
+
+\begin{table*}
+\caption{Information criteria comparison for the \cite{Sun_2015} Faraday thick challenge models. \label{tab:icthick}}
+    \centering
+    \begin{tabular}{@{\extracolsep{3pt}}lccccccccc@{}}
+    \hline
+     & \multicolumn{3}{c}{\textbf{BIC}} & \multicolumn{3}{c}{\textbf{AIC}} & \multicolumn{3}{c}{\textbf{AICc}} \\
+     \cline{2-4} \cline{5-7} \cline{8-10} \\
+     & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 \\\hline
+    \textbf{Model 14} & & & & & & & & & \\
+    \emph{Median} & 4615.45 & 4823.31 & 4834.72 & 4597.86 & 4801.32 & 4808.33 & 4597.79 & 4801.22 & 4808.19 \\
+    \emph{IQR} & 246.48 & 135.32 & 144.74 & 246.48 & 135.32 & 144.74 & 246.48 & 135.32 & 144.74 \\
+    \emph{Median Rank} & \textbf{1} & 2  & 3 & \textbf{1} & 2  & 3 & \textbf{1} & 2  & 3 \\\hline
+    \textbf{Model 15} & & & & & & & & & \\
+    \emph{Median} & 3571.76 & 3675.95 & 3755.47 & 3554.17 & 3653.97 & 3729.09 & 3554.10 & 3653.87 & 3728.95 \\
+    \emph{IQR} & 216.48 & 206.81 & 297.21 & 216.48 & 206.81 & 297.21 & 216.48 & 206.81 & 297.21 \\
+    \emph{Median Rank} & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 \\\hline
+    \textbf{Model 16} & & & & & & & & & \\
+    \emph{Median} & 3570.51 & 3557.67 & 3468.77 & 3552.93 & 3535.69 & 3442.39 & 3552.86 & 3535.58 & 3442.25 \\
+    \emph{IQR} & 213.71 & 237.92 & 223.90 & 213.71 & 237.92 & 223.90 & 213.71 & 237.92 & 223.90 \\
+    \emph{Median Rank} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} \\\hline
+    \textbf{Model 17} & & & & & & & & & \\
+    \emph{Median} & 3600.12 & 3648.49 & 3698.21 & 3582.53 & 3626.51 & 3671.82 & 3582.46 & 3626.41 & 3671.68 \\
+    \emph{IQR} & 102.78 & 124.75 & 138.62 & 102.78 & 124.75 & 138.62 & 102.78 & 124.75 & 138.62 \\
+    \emph{Median Rank} & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 \\\hline
+    \end{tabular}
+\end{table*}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
