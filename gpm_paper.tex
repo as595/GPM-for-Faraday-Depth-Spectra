@@ -682,7 +682,7 @@ where $h_1$, $c_1$, $P$, $h_2$ and $c_2$ are hyper-parameters. Both the 4-HP and
 
 Although different methods of evaluating competing models have been developed, the computational complexity involved in applying them limits their applicability. To overcome this limitation, easier-to-use approximate methods are commonly used to compare the performance of two or more models. These include the Bayesian Information Criterion (BIC), the Akaike Information Criterion (AIC) and the corrected Akaike Information Criterion (AICc). These information criteria are designed to evaluate the amount of information lost by a particular model. The model that loses the least information, i.e. has the lowest valued information criterion, is considered to be the preferred model.
 
-\cite{burnham} suggest that the  BIC is  a powerful model selection tool when the `true' model is in the set of test models; however, in the case of empirical data where the true model is unlikely to be known a priori the AIC is considered to be a more appropriate criterion. Furthermore, the \emph{corrected} AIC places a stronger complexity penalty on models used with finite data series than the original AIC. In the case of small sample sizes it is considered to be more appropriate and accurate for finding the preferred model. However, \cite{kassrafferty} suggest that the AIC should only be used in situations where the prior distribution is similar to that of the likelihood and that when this isn't the case and the prior is significantly less informative than the likelihood then the BIC will favour simpler models than the AIC. 
+\cite{burnham} suggest that the  BIC is  a powerful model selection tool when the `true' model is in the set of test models; however, in the case of empirical data where the true model is unlikely to be known a priori the AIC is considered to be a more appropriate criterion. Furthermore, the \emph{corrected} AIC places a stronger complexity penalty on models used with finite data series than the original AIC. In the case of small sample sizes it is considered to be more appropriate and accurate for finding the preferred model. However, \cite{kassrafferty} suggest that the AIC should only be used in situations where the prior distribution is similar to that of the likelihood and that when this isn't the case and the prior is significantly less informative than the likelihood then the BIC will favour simpler models than the AIC.
 
 For each sample dataset we optimize the hyper-parameters for each of the three kernels using the method described in \S~\ref{sec:optimization} and use these values to compute the Bayesian Information Criteria \citep[BIC;][]{1978AnSta...6..461S},
 %
@@ -704,17 +704,18 @@ and the corrected AIC \citep[AICc;][]{AICc},
 %
 where $\log L^\ast$ is given by Equation~\ref{eq:logl}, $K$ is the number of hyper-parameters, and $N=600$ is the number of data points.
 
-We calculate the median value and inter-quartile range for each of the three information criteria from ten different noise realisations with SNR$_{\rm int}$=32. 
-%Examples of these values are shown in Table~\ref{tab:icthin} for the models with only one Faraday thin component, and are continued in Appendix~\ref{app:ic} for the other fourteen models. 
+We calculate the median value and inter-quartile range for each of the three information criteria from ten different noise realisations with SNR$_{\rm int}$=32.
+%Examples of these values are shown in Table~\ref{tab:icthin} for the models with only one Faraday thin component, and are continued in Appendix~\ref{app:ic} for the other fourteen models.
 %
 The goodness of fit statistics for the Faraday challenge models using the two alternative kernels are $\chi^2_{\rm r} = 0.98$ for the 4-HP model, and $\chi^2_{\rm r} = 0.97$ for the 5-HP model.
 
-The median values of the information criteria suggest a preference for the HP-4 kernel in the case of single Faraday thin component models, a preference for the HP-5 kernel in the case of double Faraday thin models, and a preference for the HP-3 kernel in the case of Faraday thick models. However, we note that these are modal preferences and no model type shows a unanimous preference for a particular kernel. Indeed, although ranking the three kernels using the median value of the information criteria for each data set may nominally show a preference for one kernel above others, the overlapping inter-quartile ranges for most models suggest that there is in fact no clear preference. The only model where one kernel is significantly preferred is Model 1, where the inter-quartile range of the HP-4 kernel is outside the inter-quartile range of both other kernels, see Figure~\ref{fig:model1bic}. We also see no difference in the median ranking across the three information criteria, which is perhaps unsurprising given that $N \gg K$ in all cases. Furthermore, as noted by \cite{biccomp}, information criteria comparisons are appropriate only for data sets with the same number of measurement samples, and we emphasise that the kernel comparison presented here is for the specifications of the test sets in the \cite{Sun_2015} Faraday challenge. 
+The median values of the information criteria suggest a preference for the HP-4 kernel in the case of single Faraday thin component models, a preference for the HP-5 kernel in the case of double Faraday thin models, and a preference for the HP-3 kernel in the case of Faraday thick models. However, we note that these are modal preferences and no model type shows a unanimous preference for a particular kernel. Indeed, although ranking the three kernels using the median value of the information criteria for each data set may nominally show a preference for one kernel above others, the overlapping inter-quartile ranges for most models suggest that there is in fact no clear preference. The only model where one kernel is significantly preferred is Model 1, where the inter-quartile range of the HP-4 kernel is outside the inter-quartile range of both other kernels, see Figure~\ref{fig:model1bic}. We also see no difference in the median ranking across the three information criteria, which is perhaps unsurprising given that $N \gg K$ in all cases. Furthermore, as noted by \cite{biccomp}, information criteria comparisons are appropriate only for data sets with the same number of measurement samples, and we emphasise that the kernel comparison presented here is for the specifications of the test sets in the \cite{Sun_2015} Faraday challenge.
 %
 \begin{figure}
     \centering
     \includegraphics[width=0.45\textwidth]{./FIGURES/model0_info.png}
-    \caption{Box-and-whisker plots for BIC values derived from each of the 3 kernels using 10 noise realisations of Model 1 from \cite{Sun_2015}. The boxes show the first, the second (median), and the third quartile, and the ends of the whiskers show the minimum and maximum values.\label{fig:model1bic}}
+    \caption{Box-and-whisker plots for BIC values derived from each of the 3 kernels using 10 noise realisations of Model 1 from \protect\cite{Sun_2015}. The boxes show the first, the second (median), and the third quartile, and the ends of the whiskers show the minimum and maximum values.}
+    \label{fig:model1bic}
 \end{figure}
 
 
@@ -770,7 +771,7 @@ SWN acknowledges support from the UK Newton Fund via the Science \& Technology F
 \newcommand\Bstrut{\rule[-1.1ex]{0pt}{0pt}} % bottom strut
 %
  \begin{table*}
-\caption{\label{tab:challenge}}
+\caption{}
 \begin{tabular}{@{\extracolsep{4pt}}|l|c|c|c|c|c|c|c|c|c|c|c|c|@{}}
 \hline
  & \multicolumn{9}{c}{Input Parameters} &  \multicolumn{3}{c}{Evaluation Metrics} \\
@@ -795,13 +796,14 @@ Model 15 & 1.80 & $-240.22$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 50
 Model 16 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.90 & $-136.98$ & 25.00  & 0.86 & 0.86 & -1.45 \\
 Model 17 & 1.80 & $-240.00$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 25.00  & 0.93 & 0.92 & -1.31  \\\hline
 \end{tabular}
+\label{tab:challenge}
 \end{table*}
 
 \section{Information Criteria}
 \label{app:ic}
 
 \begin{table*}
-\caption{Information criteria comparison for the \cite{Sun_2015} single component Faraday thin challenge models. \label{tab:icthin}}
+\caption{Information criteria comparison for the \protect\cite{Sun_2015} single component Faraday thin challenge models.}
     \centering
     \begin{tabular}{@{\extracolsep{3pt}}lccccccccc@{}}
     \hline
@@ -821,10 +823,11 @@ Model 17 & 1.80 & $-240.00$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 25
     \emph{IQR} & 24.82 & 25.29 & 40.32 & 24.82 & 25.29 & 40.32 & 24.82 & 25.29 & 40.32 \\
     \emph{Median Rank} & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 \\\hline
     \end{tabular}
+ \label{tab:icthin}
 \end{table*}
 
 \begin{table*}
-\caption{Information criteria comparison for the \cite{Sun_2015} two component Faraday thin challenge models. \label{tab:icdouble}}
+\caption{Information criteria comparison for the \protect\cite{Sun_2015} two component Faraday thin challenge models.}
     \centering
     \begin{tabular}{@{\extracolsep{3pt}}lccccccccc@{}}
     \hline
@@ -872,11 +875,12 @@ Model 17 & 1.80 & $-240.00$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 25
     \emph{IQR} & 48.46 & 31.59 & 85.03 & 48.46 & 31.59 & 85.03 & 48.46 & 31.59 & 85.03 \\
     \emph{Median Rank} & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 \\\hline
     \end{tabular}
+\label{tab:icdouble}
 \end{table*}
 
 
 \begin{table*}
-\caption{Information criteria comparison for the \cite{Sun_2015} Faraday thick challenge models. \label{tab:icthick}}
+\caption{Information criteria comparison for the \protect\cite{Sun_2015} Faraday thick challenge models.}
     \centering
     \begin{tabular}{@{\extracolsep{3pt}}lccccccccc@{}}
     \hline
@@ -900,6 +904,7 @@ Model 17 & 1.80 & $-240.00$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 25
     \emph{IQR} & 102.78 & 124.75 & 138.62 & 102.78 & 124.75 & 138.62 & 102.78 & 124.75 & 138.62 \\
     \emph{Median Rank} & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 \\\hline
     \end{tabular}
+  \label{tab:icthick}
 \end{table*}
 
 
