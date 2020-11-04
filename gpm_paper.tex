@@ -133,7 +133,7 @@ In order to exploit the use of Fast Fourier Transforms (FFTs), computational app
 %
 known as the rotation measure transfer function, RMTF$(\phi)$. Consequently, the complications caused by both the $\lambda^2 < 0$ problem and the mapping of linear frequency to wavelength-squared may be encapsulated in the weighting function $W(\lambda^2)$ and its Fourier counterpart, RMTF($\phi$). Although attempts have been made to deconvolve the RMTF from the Faraday depth spectra, e.g. \cite{2009IAUS..259..591H}, the  methods are inherently underconstrained due to the $P(\lambda^2<0) = \varnothing$ problem, resulting in a statistical ambiguity in the results.
 
-These issues are of particular importance when complex or compound Faraday structures are seen along a single line of sight. In a blind data challenge comparing different methods for extracting the parameters of Faraday structures, \cite{Sun_2015} noted that RM synthesis was highly prone to missing composite Faraday structures and that the $\sim$25\% of extragalactic sources seen observationally to have such structures \citep{law2011} was likely to be an underestimate. \cite{Sun_2015} concluded that when Faraday complexity is present, only QU-fitting methods will produce results that do not introduce extraneous scatter in recovered RM values. Such QU-fitting methods, e.g. \cite{Farnsworth_2011, 10.1111/j.1365-2966.2012.20554.x, 2014ApJ...792...51I}, model the observed polarization, $\tilde{P}(\lambda^2)$, directly rather than decomposing Faraday depth spectra to recover parameters. However, whilst QU-fitting methods can be more reliable for recovering composite structures, in particular those including Faraday thick components, they rely on physically parametrised models of the synchrotron-emitting and Faraday rotating media along the line of sight to be known a priori.
+These issues are of particular importance when complex or compound Faraday structures are seen along a single line of sight. In a blind data challenge comparing different methods for extracting the parameters of Faraday structures, \cite{Sun_2015} noted that RM synthesis was highly prone to missing composite Faraday structures and that the $\sim$25\% of extragalactic sources found observationally by \citep{law2011} was likely to be an underestimate. \cite{Sun_2015} concluded that when Faraday complexity is present, only QU-fitting methods will produce results that do not introduce extraneous scatter in recovered RM values. Such QU-fitting methods, e.g. \cite{Farnsworth_2011, 10.1111/j.1365-2966.2012.20554.x, 2014ApJ...792...51I}, model the observed polarization, $\tilde{P}(\lambda^2)$, directly rather than decomposing Faraday depth spectra to recover parameters. However, whilst QU-fitting methods can be more reliable for recovering composite structures, in particular those including Faraday thick components, they rely on physically parameterised models of the synchrotron-emitting and Faraday rotating media along the line of sight to be known a priori.
 
 In this work we explore the potential for using a Gaussian Process Modelling (GPM) approach to improve both the interpretation of Faraday depth spectra and the recovery of physical parameters from polarization measurements. In its simplest form, a GPM approach can be considered part of the family of QU-fitting methods; however, it has certain advantages over physically parameterised model-fitting methods, which include both a robustness to using non-exact models for imperfectly known datasets and an ability to provide predictive models for imputation including posterior variances.  The contents of this paper are as follows, in \S~\ref{sec:method} we describe the underlying GPM methodology including a description of the covariance kernel function employed and the optimization of hyper-parameters; in \S~\ref{sec:sims} we illustrate the impact of GP optimisation and re-sampling of polarization data on their resulting Faraday depth spectra in the presence of significant RFI flagging, and demonstrate how the rotation measures for Faraday thin data can be recovered from the hyper-parameters of the GP; in \S~\ref{sec:joedata} we demonstrate the method using a simulated source population with observational specifications matching that of the MeerKAT radio telescope; in \S~\ref{sec:disc} we discuss the implications of these results, compare the method to previous work in the literature and consider the use of more complex covariance kernels. In Section~\ref{sec:conclusions} we draw our conclusions.
 
@@ -149,12 +149,14 @@ In astrophysics, Gaussian processes have been used in various applications inclu
 
 The transfer function described in Equation~\ref{eq:rmtf} is a function of the observational sampling in $\lambda^2$-space. In practice this sampling is affected not only by the characteristics of the telescope's receiver system but also by the necessary removal of frequency channels affected by radio frequency interference (RFI). Radio telescopes operating at or close to L-band (1.4\,GHz) typically experience data flagging at a level of $20-50\%$ in bandwidth due to a wide variety of both terrestrial and satellite RFI sources \citep[e.g.][]{deep2}. As well as negatively impacting the sensitivity of an observation, this flagging can also result in large contiguous gaps in the frequency coverage that have a detrimental effect on the form of the RMTF.
 
-Contingent on there being sufficient information in the remaining data, Gaussian process modelling may provide a potential method for reconstructing these missing data subject to only weak assumptions about the form of the data and without the need for a parameterised physical model. Furthermore, GPM not only provides a prediction of the value for each missing data point but also an uncertainty on that value, allowing astronomers to set thresholds on the degree of reliability they are prepared to accept when imputing the values of missing data points.
+Contingent on there being sufficient information in the remaining data, Gaussian process modelling may provide a potential method for reconstructing these missing data subject to only weak assumptions about the form of the data and without the need for a parameterised physical model. Furthermore, GPM not only provides a prediction of the value for each missing data point but also an uncertainty on that value, allowing astronomers to set thresholds on the degree of reliability they are prepared to accept when imputing the values of missing data points. 
+
+From the perspective of imputation in a more general sense, this kind of application addressing RFI excision can be considered as an example of recovering data missing completely at random (MCAR) and/or missing at random \citep[MAR; e.g.][]{MAR}, depending on the nature of the RFI, i.e. it is being used to repair deficits from local interruptions in the data set rather than recovering information from a signal at or below the reliable cusp of detection.
 
 \subsection{GPM for resampling of irregular data}
 \label{sec:resampling}
 
-In addition to the imputation of missing data values, GPM can also provide a method of re-sampling observational data onto a uniformly spaced $\lambda^2$-space. Since data are natively taken in channels uniformly space in frequency, practical implementations of RM Synthesis require these data to be re-sampled, or {\it gridded}, into a regularly spaced array of $\lambda^2$-positions in order to use an FFT transformation into Faraday depth space, as implemented in for example {\sc pyrmsynth}\footnote{\url{https://github.com/mrbell/pyrmsynth}} package that was used to perform RM synthesis for the LOFAR Two-metre Sky Survey \citep{lofarpyrmsynth}. Like RFI flagging, the non-linear relationship between frequency and wavelength-squared results in a distribution of measured data points that are often separated by large contiguous gaps in $\lambda^2$-space, resulting in high sidelobes in the RMTF. Furthermore, GPM can not only be used to re-sample data within the observed bandwidth but also to predict data beyond the boundaries of that bandwidth. Without additional data, these predictions will be subject to rapidly increasing degrees of uncertainty but may still be used over moderate distances in frequency space to improve the resolution of a measurement in Faraday depth. In practice, re-sampling to uniformly spaced $\lambda^2$-positions and imputing the values of data that are missing due to RFI flagging can be done simultaneously.
+In addition to the imputation of missing data values, GPM can also provide a method of re-sampling observational data onto a uniform spacing in $\lambda^2$-space. Since data are natively taken in channels uniformly spaced in frequency, practical implementations of RM Synthesis require these data to be re-sampled, or {\it gridded}, into a regularly spaced array of $\lambda^2$-positions in order to use an FFT transformation into Faraday depth space, as implemented in for example {\sc pyrmsynth}\footnote{\url{https://github.com/mrbell/pyrmsynth}} package that was used to perform RM synthesis for the LOFAR Two-metre Sky Survey \citep{lofarpyrmsynth}. Like RFI flagging, the non-linear relationship between frequency and wavelength-squared results in a distribution of measured data points that are often separated by large contiguous gaps in $\lambda^2$-space, resulting in high sidelobes in the RMTF. Furthermore, GPM can not only be used to re-sample data within the observed bandwidth but also to predict data beyond the boundaries of that bandwidth. Without additional data, these predictions will be subject to rapidly increasing degrees of uncertainty but may still be used over moderate distances in frequency space to improve the resolution of a measurement in Faraday depth. In practice, re-sampling to uniformly spaced $\lambda^2$-positions and imputing the values of data that are missing due to RFI flagging can be done simultaneously.
 
 
 \section{Method}
@@ -525,12 +527,12 @@ We now extend the application to simulated data to a large data set, such as mig
 
 %Polarization surveys for the MIGHTEE survey [REF] are expected to be conducted in the MeerKAT mid-frequency band ($0.90 - 1.67$\,GHz) using 135 frequency channels across the band. This results in a channel width of $\delta\nu \approx 6$\,MHz. The relevant parameters of the MeerKAT for this work are as shown in Table~\ref{tab:meerkat} .
 
-10,000 Faraday thin sources were created with an RM taken from a uniform distribution between -100 and +100\,rad\,m$^{-2}$. Stokes~Q and U values were generated for 320 frequency channels spaced uniformly in wavelength from 0.88\,GHz to 1.68\,GHz. The intrinsic angle of polarisation for each source, $\chi_0$, was sampled randomly from a uniform distribution $[-\pi, +\pi)$.
-For each frequency channel, noise was added to the Stokes~Q and U values using a normal distribution with a mean of zero and a variance of $500\mu$\,Jy\,beam$^{-1}$, equivalent to an integrated noise level of $\sim 30\mu$Jy\,beam$^{-1}$. These specifications are equivalent to the observational parameters of the MeerKAT MIGHTEE survey \citep{Taylor_2017}.
+A population of 10,000 Faraday thin sources was created with a Stokes~I flux density at 1.4\,GHz taken from a uniform distribution with values between 10\,$\mu$Jy and  30\,mJy, and an RM taken from a uniform distribution between -100 and +100\,rad\,m$^{-2}$. Stokes~Q and U values were generated for 320 frequency channels spaced uniformly in wavelength from 0.88\,GHz to 1.68\,GHz. The intrinsic angle of polarisation for each source, $\chi_0$, was sampled randomly from a uniform distribution $[-\pi, +\pi)$.
+For each frequency channel, noise was added to the Stokes~Q and U values using a normal distribution with a mean of zero and a variance of $180\mu$\,Jy\,beam$^{-1}$, equivalent to an integrated noise level of $\sim 10\mu$Jy\,beam$^{-1}$. These specifications are representative of the observational parameters for the MeerKAT MIGHTEE survey \citep{Taylor_2017}.
 
-Values for Stokes~I were taken informed by the extragalactic source counts models of \cite{dezotti}. These models cover flux density values up to 1\,Jy for Star Forming Galaxies (SFGs), and up to 148.4\,Jy for Active Galactic Nuclei (AGN).
+%Values for Stokes~I were taken informed by the extragalactic source counts models of \cite{dezotti}. These models cover flux density values up to 1\,Jy for Star Forming Galaxies (SFGs), and up to 148.4\,Jy for Active Galactic Nuclei (AGN).
 
-The frequency-dependence of the flux density values were simulated with a frequency dependence of
+The frequency-dependence of the flux density was modelled such that
 %
 \begin{equation}
 \label{FreqDependent}
@@ -553,10 +555,8 @@ where $Q$ and $U$ are the Stokes parameters for linear polarisation, $I$ is the 
 \log \Pi = -(0.051\pm0.004) \log S_{\rm 1.4\,GHz} + (0.388\pm0.007)
 \end{equation}
 %
-\citep{Stil_2014}, where $\Pi_{0, {\rm med}}$ is the median percentage polarisation fraction and $S_{\rm 1.4\,GHz}$ is the 1.4\,GHz flux density in mJy.
+\citep{Stil_2014}, where $\Pi$ is the median percentage polarisation fraction and $S_{\rm 1.4\,GHz}$ is the 1.4\,GHz flux density in mJy.
 %
-\citep{Stil_2014}, where $\Pi_{0, {\rm med}}$ is the median percentage polarisation fraction and $S_{\rm 1.4\,GHz}$ is the 1.4\,GHz flux density in mJy.
-
 %Figure \ref{fig:PolfracVsFluxDensity} shows how the polarisation fraction varies with the flux density according to Equation~\ref{eq:StilEquation}.
 %
 %\begin{figure}
@@ -576,7 +576,7 @@ where $Q$ and $U$ are the Stokes parameters for linear polarisation, $I$ is the 
 %\end{tabular}
 %\end{table}
 
-We randomly select 500 sources from this population with an SNR$_{\rm int}\ge8$ and $|RM|>\phi_{\rm lim}$ and use an optimised GP with the kernel specified in Equation~\ref{eq:celkernel} to recover the rotation measure for each object. We use a prior range of $\mathcal{U}(-25,+5)$ for all hyper-parameters in log space.  The distribution of recovered RM values is shown in Figure~\ref{fig:survey}, where it is compared to the known input values. It can be seen that the rotation measures are recovered with consistently good accuracy. Errors on the recovered RMs are calculated from the 68\% confidence interval on the optimised value of $\ln P$, which results in asymmetric uncertainties on the RM values. Larger uncertainties are seen for lower SNR$_{\rm int}$ samples, as also seen in Figure~\ref{fig:rm_snr}. For 500 randomly selected samples under these constraints all of the recovered RMs lie within 5$\sigma$ of the true value and $>99\%$ within 3$\sigma$. The average run time per object is 43\,seconds on a Macbook Pro with a 3.5\,GHz Intel Core i7 processor.
+We randomly select 500 sources from this population with an SNR$_{\rm int}\ge8$ and $|RM|>\phi_{\rm lim}$ and use an optimised GP with the kernel specified in Equation~\ref{eq:celkernel} to recover the rotation measure for each object. We use a prior ranges as specified in Table~\ref{tab:priors}.  The distribution of recovered RM values is shown in Figure~\ref{fig:survey}, where it is compared to the known input values. It can be seen that the rotation measures are recovered with consistently good accuracy, i.e. $\pm 1\,\sigma$. Uncertainties on the recovered RMs are calculated from the 68\% confidence interval on the optimised value of $\log P$, which results in asymmetric uncertainties on the RM values. Larger uncertainties are seen for lower SNR$_{\rm int}$ samples, as also seen in Figure~\ref{fig:rm_snr}. For 500 randomly selected samples under these constraints all of the recovered RMs lie within 5$\sigma$ of the true value and $>99\%$ within 3$\sigma$. The average run time per object is 43\,seconds on a Macbook Pro with a 3.5\,GHz Intel Core i7 processor.
 %
 \begin{figure*}
 \includegraphics[width=0.9\textwidth]{./FIGURES/rm_comp.png}
@@ -640,7 +640,7 @@ Since the GP optimisation method produces a full predictive distribution at the 
 where $D$ are the input training data, $P$ are the input polarization data, $P_{\ast}$ are the GP reconstructed polarization data, and $\sigma_{\ast}^2$ is the variance of the GP reconstruction, defined in Equation~\ref{eq:gpvar}.
 We standardise this loss by subtracting the equivalent loss as calculated using a model that predicts using a simple Gaussian with the mean and variance of the input data. The individual performance metrics for each model in the Faraday challenge are listed in Appendix~\ref{app:challenge}.
 
-The median of the reduced chi-squared statistic recovered from our model, $\chi^2_{\rm r} = 0.99$, is in good agreement with the expected optimum value of $1.00\pm0.02$ from Sun et~al. (2014). Results for both the SMSE and $\chi_{\rm r}^2$ across all 17 test models, evaluated using SNR=32 as in \cite{Sun_2015}, are shown in Figure~\ref{fig:sunmetrics}. By comparison to Figure~3 in that work it can be seen that the GP $\chi_{\rm r}^2$ has a median value comparable to that of the three best performing methods in that work, each of which use QU-fitting approaches. Furthermore, it can also be seen that the distribution of $\chi_{\rm r}^2$ for the GP method is significantly narrower than those methods, each of which has a 68\% confidence interval that extends to values larger than $\chi_{\rm r}^2=1.1$.
+The median of the reduced chi-squared statistic recovered from our model, $\chi^2_{\rm r} = 0.99$, is in good agreement with the expected optimum value of $1.00\pm0.02$ from \cite{Sun_2015}. Results for both the SMSE and $\chi_{\rm r}^2$ across all 17 test models, evaluated using SNR=32 as in \cite{Sun_2015}, are shown in Figure~\ref{fig:sunmetrics}. By comparison to Figure~3 in that work it can be seen that the GP $\chi_{\rm r}^2$ has a median value comparable to that of the three best performing methods in that work, each of which use QU-fitting approaches. Furthermore, it can also be seen that the distribution of $\chi_{\rm r}^2$ for the GP method is significantly narrower than those methods, each of which has a 68\% confidence interval that extends to values larger than $\chi_{\rm r}^2=1.1$.
 %
 \begin{figure}
     \centering
@@ -737,7 +737,7 @@ We have evaluated the GP reconstruction proposed here against other methods in t
 
 \section*{Acknowledgements}
 
-SWN acknowledges support from the UK Newton Fund via the Science \& Technology Facilities Council (STFC) through the Development in Africa with Radio Astronomy (DARA) Big Data project. AMS gratefully acknowledges support from an Alan Turing Institute AI fellowship. JH acknowledges support from the UK Science \& Technology Facilities Council (STFC). MC acknowledges support from CONICYT PFCHA/DOCTORADO BECAS CHILE/2018-72190574.
+The authors thank Torsten En{\ss}lin for useful comments on the draft of this paper. SWN acknowledges support from the UK Newton Fund via the Science \& Technology Facilities Council (STFC) through the Development in Africa with Radio Astronomy (DARA) Big Data project. AMS gratefully acknowledges support from an Alan Turing Institute AI fellowship. JH acknowledges support from the UK Science \& Technology Facilities Council (STFC). MC acknowledges support from CONICYT PFCHA/DOCTORADO BECAS CHILE/2018-72190574.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -771,7 +771,8 @@ SWN acknowledges support from the UK Newton Fund via the Science \& Technology F
 \newcommand\Bstrut{\rule[-1.1ex]{0pt}{0pt}} % bottom strut
 %
  \begin{table*}
-\caption{}
+\caption{Faraday challenge models. This table lists the input parameters for the 17 models from \cite{Sun_2015} in Columns $1-9$, and the evaluation metrics for the predicted complex Stokes data from the optimised GP in Columns $10-12$. See Section~\ref{sec:challenges} for details. \label{tab:challenge}}
+
 \begin{tabular}{@{\extracolsep{4pt}}|l|c|c|c|c|c|c|c|c|c|c|c|c|@{}}
 \hline
  & \multicolumn{9}{c}{Input Parameters} &  \multicolumn{3}{c}{Evaluation Metrics} \\
@@ -797,114 +798,6 @@ Model 16 & $-$ & $-$ & $-$ & $-$ & $-$ & $-$ & 1.90 & $-136.98$ & 25.00  & 0.86 
 Model 17 & 1.80 & $-240.00$ & $-36.00$ & $-$ & $-$ & $-$ & 1.90 & $-250.17$ & 25.00  & 0.93 & 0.92 & -1.31  \\\hline
 \end{tabular}
 \label{tab:challenge}
-\end{table*}
-
-\section{Information Criteria}
-\label{app:ic}
-
-\begin{table*}
-\caption{Information criteria comparison for the \protect\cite{Sun_2015} single component Faraday thin challenge models.}
-    \centering
-    \begin{tabular}{@{\extracolsep{3pt}}lccccccccc@{}}
-    \hline
-     & \multicolumn{3}{c}{\textbf{BIC}} & \multicolumn{3}{c}{\textbf{AIC}} & \multicolumn{3}{c}{\textbf{AICc}} \\
-     \cline{2-4} \cline{5-7} \cline{8-10} \\
-     & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 \\\hline
-    \textbf{Model 1} & & & & & & & & & \\
-    \emph{Median} & 3755.15 & 3640.21 & 3844.46 & 3737.56 & 3618.23 & 3818.08 & 3737.50 & 3618.12 & 3817.94 \\
-    \emph{IQR} & 100.50 & 60.49 & 141.18 & 100.50 & 60.49 & 141.18 & 100.50 & 60.49 & 141.18 \\
-    \emph{Median Rank} & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 \\\hline
-    \textbf{Model 2} & & & & & & & & & \\
-    \emph{Median} & 3470.12 & 3402.59 & 3586.46 & 3452.53 & 3380.61 & 3560.08 & 3452.46 & 3380.51 & 3559.93 \\
-    \emph{IQR} & 176.85 & 140.70 & 201.36 & 176.85 & 140.70 & 201.36 & 176.85 & 140.70 & 201.36 \\
-    \emph{Median Rank} & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 \\\hline
-    \textbf{Model 3} & & & & & & & & & \\
-    \emph{Median} & 1747.28 & 1773.87 & 1784.08 &1729.69 & 1751.88 & 1757.70 & 1729.62 & 1751.78 & 1757.56 \\
-    \emph{IQR} & 24.82 & 25.29 & 40.32 & 24.82 & 25.29 & 40.32 & 24.82 & 25.29 & 40.32 \\
-    \emph{Median Rank} & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 \\\hline
-    \end{tabular}
- \label{tab:icthin}
-\end{table*}
-
-\begin{table*}
-\caption{Information criteria comparison for the \protect\cite{Sun_2015} two component Faraday thin challenge models.}
-    \centering
-    \begin{tabular}{@{\extracolsep{3pt}}lccccccccc@{}}
-    \hline
-     & \multicolumn{3}{c}{\textbf{BIC}} & \multicolumn{3}{c}{\textbf{AIC}} & \multicolumn{3}{c}{\textbf{AICc}} \\
-     \cline{2-4} \cline{5-7} \cline{8-10} \\
-     & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 \\\hline
-    \textbf{Model 4} & & & & & & & & & \\
-    \emph{Median} & 4277.15 & 4271.52 & 4240.80 & 4259.56 & 4249.53 & 4214.42 & 4259.49 & 4249.43 & 4214.28 \\
-    \emph{IQR} & 159.35 & 129.16 & 310.82 & 159.35 & 129.16 & 310.82 & 1159.35 & 129.16 & 310.82 \\
-    \emph{Median Rank} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} \\\hline
-    \textbf{Model 5} & & & & & & & & & \\
-    \emph{Median} & 2243.48 & 2227.26 & 2177.76 & 2225.89 & 2205.27 & 2151.37 & 2225.82 & 2205.17 & 2151.23 \\
-    \emph{IQR} & 78.90 & 47.88 & 183.96 & 78.90 & 47.88 & 183.96 & 78.90 & 47.88 & 183.96 \\
-    \emph{Median Rank} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} \\\hline
-    \textbf{Model 6} & & & & & & & & & \\
-    \emph{Median} & 2607.97 & 2647.48 & 2609.77 & 2590.38 & 2625.50 & 2583.39 & 2590.31 & 2625.40 & 2583.25 \\
-    \emph{IQR} & 119.54 & 242.46 & 124.85 & 119.54 & 242.46 & 124.85 & 119.54 & 242.46 & 124.85 \\
-    \emph{Median Rank} & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 \\\hline
-    \textbf{Model 7} & & & & & & & & & \\
-    \emph{Median} & 1938.54 & 1910.52 & 1983.06 & 1920.95 & 1888.53 & 1956.68 & 1920.88 & 1888.43 & 1956.53 \\
-    \emph{IQR} & 45.77 & 113.92 & 50.01 & 45.77 & 113.92 & 50.01 & 45.77 & 113.92 & 50.01 \\
-    \emph{Median Rank} & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 \\\hline
-    \textbf{Model 8} & & & & & & & & & \\
-    \emph{Median} & 3752.25 & 3784.76 & 3820.70 & 3734.66 & 3762.77 & 3794.32 & 3734.59 & 3762.67 & 3794.17 \\
-    \emph{IQR} & 201.42 & 259.46 & 168.60 & 201.42 & 259.46 & 168.60 & 201.42 & 259.46 & 168.60 \\
-    \emph{Median Rank} & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 \\\hline
-    \textbf{Model 9} & & & & & & & & & \\
-    \emph{Median} & 2480.21 & 2458.57 & 2437.71 & 2462.62 & 2436.58 & 2411.33 & 2462.55 & 2436.48 & 2411.19 \\
-    \emph{IQR} & 153.57 & 154.53 & 135.08 & 153.57 & 154.53 & 135.08 & 153.57 & 154.53 & 135.08 \\
-    \emph{Median Rank} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} \\\hline
-    \textbf{Model 10} & & & & & & & & & \\
-    \emph{Median} & 3715.45 & 3730.73 & 3645.83 & 3697.86 & 3708.75 & 3619.45 & 3697.80 & 3708.64 & 3619.31 \\
-    \emph{IQR} & 347.43 & 262.59 & 221.87 & 347.43 & 262.59 & 221.87 & 347.43 & 262.59 & 221.87 \\
-    \emph{Median Rank} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} \\\hline
-    \textbf{Model 11} & & & & & & & & & \\
-    \emph{Median} & 3644.72 & 3778.41 & 3572.76 & 3627.13 & 3756.42 & 3546.38 & 3627.06 & 3756.32 & 3546.24 \\
-    \emph{IQR} & 185.38 & 122.68 & 127.99 & 185.38 & 122.68 & 127.99 & 185.38 & 122.68 & 127.99 \\
-    \emph{Median Rank} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} \\\hline
-    \textbf{Model 12} & & & & & & & & & \\
-    \emph{Median} & 3645.33 & 3655.36 & 3489.09 & 3627.74 & 3633.38 & 3462.71 & 3627.67 & 3633.28 & 3462.57 \\
-    \emph{IQR} & 241.72 & 315.95 & 78.99 & 241.72 & 315.95 & 78.99 & 241.72 & 315.95 & 78.99 \\
-    \emph{Median Rank} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} \\\hline
-    \textbf{Model 13} & & & & & & & & & \\
-    \emph{Median} & 1843.74 & 1829.21 & 1848.77 & 1826.15 & 1807.22 & 1822.39 & 1826.08 & 1807.12 & 1822.25 \\
-    \emph{IQR} & 48.46 & 31.59 & 85.03 & 48.46 & 31.59 & 85.03 & 48.46 & 31.59 & 85.03 \\
-    \emph{Median Rank} & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 \\\hline
-    \end{tabular}
-\label{tab:icdouble}
-\end{table*}
-
-
-\begin{table*}
-\caption{Information criteria comparison for the \protect\cite{Sun_2015} Faraday thick challenge models.}
-    \centering
-    \begin{tabular}{@{\extracolsep{3pt}}lccccccccc@{}}
-    \hline
-     & \multicolumn{3}{c}{\textbf{BIC}} & \multicolumn{3}{c}{\textbf{AIC}} & \multicolumn{3}{c}{\textbf{AICc}} \\
-     \cline{2-4} \cline{5-7} \cline{8-10} \\
-     & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 & HP3 & HP4 & HP5 \\\hline
-    \textbf{Model 14} & & & & & & & & & \\
-    \emph{Median} & 4615.45 & 4823.31 & 4834.72 & 4597.86 & 4801.32 & 4808.33 & 4597.79 & 4801.22 & 4808.19 \\
-    \emph{IQR} & 246.48 & 135.32 & 144.74 & 246.48 & 135.32 & 144.74 & 246.48 & 135.32 & 144.74 \\
-    \emph{Median Rank} & \textbf{1} & 2  & 3 & \textbf{1} & 2  & 3 & \textbf{1} & 2  & 3 \\\hline
-    \textbf{Model 15} & & & & & & & & & \\
-    \emph{Median} & 3571.76 & 3675.95 & 3755.47 & 3554.17 & 3653.97 & 3729.09 & 3554.10 & 3653.87 & 3728.95 \\
-    \emph{IQR} & 216.48 & 206.81 & 297.21 & 216.48 & 206.81 & 297.21 & 216.48 & 206.81 & 297.21 \\
-    \emph{Median Rank} & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 \\\hline
-    \textbf{Model 16} & & & & & & & & & \\
-    \emph{Median} & 3570.51 & 3557.67 & 3468.77 & 3552.93 & 3535.69 & 3442.39 & 3552.86 & 3535.58 & 3442.25 \\
-    \emph{IQR} & 213.71 & 237.92 & 223.90 & 213.71 & 237.92 & 223.90 & 213.71 & 237.92 & 223.90 \\
-    \emph{Median Rank} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} & 3 & 2 & \textbf{1} \\\hline
-    \textbf{Model 17} & & & & & & & & & \\
-    \emph{Median} & 3600.12 & 3648.49 & 3698.21 & 3582.53 & 3626.51 & 3671.82 & 3582.46 & 3626.41 & 3671.68 \\
-    \emph{IQR} & 102.78 & 124.75 & 138.62 & 102.78 & 124.75 & 138.62 & 102.78 & 124.75 & 138.62 \\
-    \emph{Median Rank} & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 & \textbf{1} & 2 & 3 \\\hline
-    \end{tabular}
-  \label{tab:icthick}
 \end{table*}
 
 
